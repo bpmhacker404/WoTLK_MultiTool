@@ -7,7 +7,6 @@
 </h1>
 Multifunctional retroporting tool. It automates manual, routine processes and features a number of unique features, significantly speeding up the process. Just a few clicks and you can preview how your model will look in-game.
 
-
 # Features:
 ## ● CONVERT / AUTO TEXTURE FROM MANIFEST
 Converts the model, automatically renames LOD files, edits the number of nViews, corrects GlobalSequences, corrects helmet misalignment, assigns textures, if they're scattered across folders and consolidates them into one folder, compiles skin and anim files, moves them to the patch folder, and removes junk files after exporting from wow.export. Generates a model name and icon name for insertion into the dbc table, taking into account the model type and race (if it's a helmet model).
