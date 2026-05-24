@@ -2,8 +2,11 @@
       <img src="https://i.ibb.co.com/JR1rdsBG/logo.jpg" alt="Logo">
 </p>
 
-# WoTLK_MultiTool
+<h1 align="center">
+      WoTLK_MultiTool <img alt="Static Badge" src="https://img.shields.io/badge/Windows-10%2B-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/Python-3.13-yellow">
+</h1>
 Multifunctional retroporting tool. It automates manual, routine processes and features a number of unique features, significantly speeding up the process. Just a few clicks and you can preview how your model will look in-game.
+
 
 # Features:
 ## ● CONVERT / AUTO TEXTURE FROM MANIFEST
@@ -18,10 +21,9 @@ Allows you to shift the model along the x, y, z axes (for example, offsetting he
 Full copying of particles from one model to another
 ## ● TEXTURE COMPONENTS
 A module for working with textures. It will move all exported textures from the wow.export folder to the patch folder, with the option to automatically convert from DXT5 to Indexed (256Color). It will automatically remove extra digits from texture names.
-# System requirements
-Windows 10+, Python 3.13
+# Attention
 
-⚠️ Note: The program is compiled using [Nuitka](https://nuitka.net/). Nuitka converts python code to C++. When exe launched, libraries are extracted to the %temp%/WoTLK_Multitool_Data folder. Some antivirus programs may falsely flag this project (False Positive) due to packing.
+⚠️ The program is compiled using [Nuitka](https://nuitka.net/). Nuitka converts python code to C++, it allows to create an exe file of minimal size with maximum startup speed. When exe launched, libraries are extracted to the %temp%/WoTLK_Multitool_Data folder. Some antivirus programs may falsely flag this project (False Positive) due to packing.
 [VirusTotal report](https://www.virustotal.com/gui/file/079fe4264e1fde1165b49464dcf5d45022c0fcc1f95e689c5730b61660eff42a?nocache=1)
 # Build command
 ```bash
