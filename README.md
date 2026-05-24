@@ -9,7 +9,7 @@ Multifunctional retroporting tool. It automates manual, routine processes and fe
 
 # Features:
 ## ● CONVERT / AUTO TEXTURE FROM MANIFEST
-Converts the model, automatically renames LOD files, edits the number of nViews, corrects GlobalSequences, corrects helmet misalignment, assigns textures, if they're scattered across folders and consolidates them into one folder, compiles skin and anim files, moves them to the patch folder, and removes junk files after exporting from wow.export. Generates a model name and icon name for insertion into the dbc table, taking into account the model type and race (if it's a helmet model).
+Converts the model, automatically renames LOD files, edits the number of nViews, corrects GlobalSequences, corrects helmet misalignment, assigns textures, if they're scattered across folders and consolidates them into one folder, collects skin and anim files, moves them to the patch folder, and removes junk files after exporting from wow.export. Generates a model name and icon name for insertion into the dbc table, taking into account the model type and race (if it's a helmet model).
 ## ● CREATE ARRAYS / KEYFRAMES
 Instantly creates n-th number of blocks (Color, Bones, Textures, Transparency and others) with a specified number of Timestamps and Values. No more manually fiddling with bytes and offsets.
 ## ● COLOR CALCULATOR
