@@ -1,5 +1,5 @@
 <p align="center">
-      <img src="https://i.ibb.co.com/PGC99JNR/logo.jpg" alt="Logo">
+      <img src="https://i.ibb.co.com/JR1rdsBG/logo.jpg" alt="Logo">
 </p>
 
 # WoTLK_MultiTool
@@ -21,7 +21,8 @@ A module for working with textures. It will move all exported textures from the 
 # System requirements
 Windows 10+, Python 3.13
 
-⚠️ Note: The program is compiled using [Nuitka](https://nuitka.net/). Nuitka converts code to C++. When exe launched, libraries are extracted to the %temp% WoTLK_Multitool_Data folder. Some antivirus programs may falsely flag this project (False Positive) due to packing. The files are safe.
+⚠️ Note: The program is compiled using [Nuitka](https://nuitka.net/). Nuitka converts python code to C++. When exe launched, libraries are extracted to the %temp%/WoTLK_Multitool_Data folder. Some antivirus programs may falsely flag this project (False Positive) due to packing.
+[VirusTotal report](https://www.virustotal.com/gui/file/079fe4264e1fde1165b49464dcf5d45022c0fcc1f95e689c5730b61660eff42a?nocache=1)
 # Build command
 ```bash
 python -m nuitka --standalone --onefile --onefile-tempdir-spec="{TEMP}/WoTLK_Multitool_Data" --windows-console-mode=disable --remove-output --include-data-files=C:\Users\User_name\PycharmProjects\WoTLK_MultiTool\ICO.ico=multitool.ico --include-package=comtypes --nofollow-import-to=comtypes.test,comtypes.gen,cv2,cryptography,numpy,tkinter,pydoc --windows-icon-from-ico=C:\Users\User_name\PycharmProjects\WoTLK_MultiTool\ICO.ico C:\User_name\PycharmProjects\WoTLK_MultiTool\WoTLK_MultiTool.py --output-dir=C:\Users\User_name\Desktop 
