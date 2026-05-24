@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">
-      WoTLK_MultiTool <img alt="Static Badge" src="https://img.shields.io/badge/Windows-10%2B-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/Python-3.13-yellow">
+      WoTLK_MultiTool <img alt="Static Badge" src="https://img.shields.io/badge/Windows-10%2B-blue"> <img alt="Static Badge" src="https://img.shields.io/badge/Python-3.13-green">
 </h1>
 Multifunctional retroporting tool. It automates manual, routine processes and features a number of unique features, significantly speeding up the process. Just a few clicks and you can preview how your model will look in-game.
 
