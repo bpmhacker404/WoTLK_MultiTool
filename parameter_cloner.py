@@ -76,6 +76,7 @@ class ParameterCloner:
                 StatusBar.error_info(f"ERROR: Nothing to copy. Bone {self.boneIdFrom} is empty.")
                 return
 
+            # В зависимости от наличия keyframes копируем значения
             if translation_n_timestamp_pairs > 0 and translation_n_keyframe_pairs > 0:
                 self.bone_copy_translation(model_m2from, translation_n_timestamp_pairs, translation_n_keyframe_pairs)
             if rotation_n_timestamp_pairs > 0 and rotation_n_keyframe_pairs > 0:
