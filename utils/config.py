@@ -5,9 +5,9 @@ class Config:
     csvEditedValues = 0
     csvConflictValues = 0
     csvCheckedValues = 0
-    current_position = 0
-    current_png = 0
-    total_to_convert_textures = 0
+    currentPosition = 0
+    currentPng = 0
+    totalToConvertTextures = 0
     dbcTotalRows = 0
     csvErrors = 0
     csvOldNewIds = {}

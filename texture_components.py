@@ -40,7 +40,7 @@ def auto_convert_textures(textures_: list):
 
     for i, process_to_blp in enumerate(processes_to_blp):
         process_to_blp.wait()
-        Config.current_png = i + 1
+        Config.currentPng = i + 1
 
 
 def generate_random_texture_name(old_name_: str) -> str:
@@ -52,8 +52,8 @@ def generate_random_texture_name(old_name_: str) -> str:
 
 def move_texture_components_pre():
     StatusBar.clear_info()
-    Config.current_png = 0
-    Config.total_to_convert_textures = 0
+    Config.currentPng = 0
+    Config.totalToConvertTextures = 0
     StatusBar.enable_loading()
     async_manager.run_unique_task(StatusBar.converting_png(" Converting textures "))
     Thread(target=move_texture_components, daemon=True).start()
@@ -93,10 +93,10 @@ def move_texture_components():
                 for file in files:
                     textures_for_convert.append(os.path.join(cape_textures_folder, file))
 
-    Config.total_to_convert_textures = components_textures + cape_textures
+    Config.totalToConvertTextures = components_textures + cape_textures
 
     # Если нужно конвертируем через BLPConverter8
-    if auto_convert_blp and Config.total_to_convert_textures > 0:
+    if auto_convert_blp and Config.totalToConvertTextures > 0:
         for blp_texture in textures_for_convert:
             png_texture = blp_texture.replace(".blp", ".png")
             textures_for_delete.append(png_texture)
@@ -126,7 +126,7 @@ def move_texture_components():
         shutil.rmtree(cape_textures_folder)
 
     if components_textures > 0 or cape_textures > 0:
-        StatusBar.success_info(f"{Config.total_to_convert_textures} textures moved to patch folder.")
+        StatusBar.success_info(f"{Config.totalToConvertTextures} textures moved to patch folder.")
     else:
         StatusBar.error_info("ERROR: no textures found to move.")
 

@@ -74,8 +74,8 @@ class StatusBar:
         while True:
             for symbol in Config.loadingSymbols:
                 if Config.showLoading:
-                    if Config.total_to_convert_textures>0:
-                        dpg.set_value("txt_info", symbol + message + str(Config.current_png) + "/" + str(Config.total_to_convert_textures))
+                    if Config.totalToConvertTextures>0:
+                        dpg.set_value("txt_info", symbol + message + str(Config.currentPng) + "/" + str(Config.totalToConvertTextures))
                     await asyncio.sleep(0.2)
                 else:
                     return
