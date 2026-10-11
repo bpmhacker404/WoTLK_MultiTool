@@ -26,6 +26,6 @@ A module for working with textures. It will move all exported textures from the 
 [VirusTotal report](https://www.virustotal.com/gui/file/079fe4264e1fde1165b49464dcf5d45022c0fcc1f95e689c5730b61660eff42a?nocache=1)
 # Build command
 ```bash
-python -m nuitka --standalone --onefile --onefile-tempdir-spec="{TEMP}/WoTLK_Multitool_Data" --windows-console-mode=disable --remove-output --include-data-files=C:\Users\User_name\PycharmProjects\WoTLK_MultiTool\ICO.ico=multitool.ico --include-package=comtypes --nofollow-import-to=comtypes.test,comtypes.gen,cv2,cryptography,numpy,tkinter,pydoc --windows-icon-from-ico=C:\Users\User_name\PycharmProjects\WoTLK_MultiTool\ICO.ico C:\User_name\PycharmProjects\WoTLK_MultiTool\WoTLK_MultiTool.py --output-dir=C:\Users\User_name\Desktop 
+python -m nuitka --standalone --onefile --onefile-tempdir-spec="{TEMP}/WoTLK_Multitool_Data" --windows-console-mode=disable --remove-output --include-data-files=C:\Users\User_name\PycharmProjects\WoTLK_MultiTool\ICO.ico=multitool.ico --include-package=comtypes --nofollow-import-to=*.test,comtypes.gen,cv2,cryptography,numpy,tkinter,pydoc --no-deployment-flag=excluded-module-usage --windows-icon-from-ico=C:\Users\User_name\PycharmProjects\WoTLK_MultiTool\ICO.ico C:\Users\User_name\PycharmProjects\WoTLK_MultiTool\WoTLK_MultiTool.py --output-dir=C:\Users\User_name\Desktop 
 ```
 
