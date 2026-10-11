@@ -27,8 +27,8 @@ python -m nuitka --standalone --onefile --onefile-tempdir-spec="{TEMP}/WoTLK_Mul
 # // PIL Можно исключить
 # _avif.cp313-win_amd64.pyd
 # _avif.pyi
-# _imagingft.cp313-win_amd64.pyd  !!
-# _imagingft.pyi !!
+# _imagingft.cp313-win_amd64.pyd
+# _imagingft.pyi
 # _imagingmath.cp313-win_amd64.pyd
 # _imagingmath.pyi
 # _webp.cp313-win_amd64.pyd
