@@ -79,7 +79,6 @@ class ColorCalculator:
             dpg.set_value("inp_y_color", y)
             dpg.set_value("inp_z_color", z)
             dpg.set_value("inp_hex_bytes", ColorCalculator.hex_to_hex(hex_color))
-
         except ValueError:
             if len(hex_color) > 0:
                 StatusBar.error_info("ERROR: Invalid hex# code.")

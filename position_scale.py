@@ -4,7 +4,7 @@ import struct
 
 from utils.binary import Binary
 from utils.miscellaneous import check_model_path
-from utils.offsets import M2Offsets, M2Lengths
+from utils.offsets import M2Offset, M2Length
 from utils.statusbar import StatusBar
 
 
@@ -100,7 +100,7 @@ def auto_fix_helm_offset(model_path: str):
             control_bone_id, nBones, ofsBones = create_Control_Bone(model_path, nBones, ofsBones)
 
     with open(model_path, "rb+") as m2_file:
-        ofsToKeyframe = Binary.get_int_from_bytes(m2_file, ofsBones + control_bone_id * M2Lengths.bone + 32)
+        ofsToKeyframe = Binary.get_int_from_bytes(m2_file, ofsBones + control_bone_id * M2Length.bone + 32)
         ofsValue = Binary.get_int_from_bytes(m2_file, ofsToKeyframe + 4)
         x = float_from_bytes(Binary.read_bytes(m2_file, ofsValue))
         x += x_pos
@@ -129,7 +129,7 @@ def create_Control_Bone(model_path: str, nBones: int, ofsBones: int) -> tuple:
 
         # Если Bones есть копируем имеющиеся в переменную
         if nBones > 0:
-            existingBones = Binary.read_bytes(model, ofsBones, length=nBones * M2Lengths.bone)
+            existingBones = Binary.read_bytes(model, ofsBones, length=nBones * M2Length.bone)
         else:
             existingBones = b''
 
@@ -146,41 +146,41 @@ def create_Control_Bone(model_path: str, nBones: int, ofsBones: int) -> tuple:
                                     b'\x00\x00\x00\x00\x00\x00\x00\x00')
 
         # Переназначаем офсет и число Bones
-        Binary.write_bytes(model, M2Offsets.nBones, (nBones + 1).to_bytes(4, 'little'))
-        Binary.write_bytes(model, M2Offsets.ofsBones, new_ofsBones.to_bytes(4, 'little'))
+        Binary.write_bytes(model, M2Offset.nBones, (nBones + 1).to_bytes(4, 'little'))
+        Binary.write_bytes(model, M2Offset.ofsBones, new_ofsBones.to_bytes(4, 'little'))
 
         # Прописываем в parent_bone id управляющей кости во все имеющиеся кости с id -1
         for i in range(nBones):
-            parent_bone = Binary.read_bytes(model, new_ofsBones + M2Lengths.bone * i + 8, length=2)
+            parent_bone = Binary.read_bytes(model, new_ofsBones + M2Length.bone * i + 8, length=2)
             if parent_bone == b'\xFF\xFF':
-                Binary.write_bytes(model, new_ofsBones + M2Lengths.bone * i + 8, nBones.to_bytes(2, 'little'))
+                Binary.write_bytes(model, new_ofsBones + M2Length.bone * i + 8, nBones.to_bytes(2, 'little'))
 
         # Прописываем keyframes для Timestamps и Values
         for i in range(nBones, nBones + 1):
             # Timestamp
             for offset in OFFSETS_Translation:
                 if (OFFSETS_Translation.index(offset) + 1) % 2 == 1:
-                    Binary.write_bytes(model, new_ofsBones + M2Lengths.bone * i + offset, b'\x01\x00\x00\x00')
+                    Binary.write_bytes(model, new_ofsBones + M2Length.bone * i + offset, b'\x01\x00\x00\x00')
                 if (OFFSETS_Translation.index(offset) + 1) % 2 == 0:
                     last_offset = Binary.write_offset(model)
                     seq_offsets_Translation.append(last_offset[0])
-                    Binary.write_bytes(model, new_ofsBones + M2Lengths.bone * i + offset, last_offset[1])
+                    Binary.write_bytes(model, new_ofsBones + M2Length.bone * i + offset, last_offset[1])
 
             for offset in OFFSETS_Rotation:
                 if (OFFSETS_Rotation.index(offset) + 1) % 2 == 1:
-                    Binary.write_bytes(model, new_ofsBones + M2Lengths.bone * i + offset, b'\x01\x00\x00\x00')
+                    Binary.write_bytes(model, new_ofsBones + M2Length.bone * i + offset, b'\x01\x00\x00\x00')
                 if (OFFSETS_Rotation.index(offset) + 1) % 2 == 0:
                     last_offset = Binary.write_offset(model)
                     seq_offsets_Rotation.append(last_offset[0])
-                    Binary.write_bytes(model, new_ofsBones + M2Lengths.bone * i + offset, last_offset[1])
+                    Binary.write_bytes(model, new_ofsBones + M2Length.bone * i + offset, last_offset[1])
 
             for offset in OFFSETS_Scale:
                 if (OFFSETS_Scale.index(offset) + 1) % 2 == 1:
-                    Binary.write_bytes(model, new_ofsBones + M2Lengths.bone * i + offset, b'\x01\x00\x00\x00')
+                    Binary.write_bytes(model, new_ofsBones + M2Length.bone * i + offset, b'\x01\x00\x00\x00')
                 if (OFFSETS_Scale.index(offset) + 1) % 2 == 0:
                     last_offset = Binary.write_offset(model)
                     seq_offsets_Scale.append(last_offset[0])
-                    Binary.write_bytes(model, new_ofsBones + M2Lengths.bone * i + offset, last_offset[1])
+                    Binary.write_bytes(model, new_ofsBones + M2Length.bone * i + offset, last_offset[1])
 
             # Values
             for seq_offset in seq_offsets_Translation:
@@ -223,10 +223,10 @@ def get_control_bone_id(model_path: str) -> tuple:
     control_bone_id = None
 
     with open(model_path, "rb+") as m2_file:
-        nBones = Binary.get_int_from_bytes(m2_file, M2Offsets.nBones)
-        ofsBones = Binary.get_int_from_bytes(m2_file, M2Offsets.ofsBones)
+        nBones = Binary.get_int_from_bytes(m2_file, M2Offset.nBones)
+        ofsBones = Binary.get_int_from_bytes(m2_file, M2Offset.ofsBones)
         for i in range(nBones):
-            m2_file.seek(ofsBones + i * M2Lengths.bone + 12)
+            m2_file.seek(ofsBones + i * M2Length.bone + 12)
             boneCRC = int.from_bytes(m2_file.read(4), "little")
             if boneCRC == 987654321:
                 control_bone_id = i
@@ -258,7 +258,7 @@ def model_moving(model_path: str, x_pos: float, y_pos: float, z_pos: float):
             control_bone_id, nBones, ofsBones = create_Control_Bone(model_path, nBones, ofsBones)
 
     with open(model_path, "rb+") as m2_file:
-        ofsToKeyframe = Binary.get_int_from_bytes(m2_file, ofsBones + control_bone_id * M2Lengths.bone + 32)
+        ofsToKeyframe = Binary.get_int_from_bytes(m2_file, ofsBones + control_bone_id * M2Length.bone + 32)
         ofsValue = Binary.get_int_from_bytes(m2_file, ofsToKeyframe + 4)
         x = float_from_bytes(Binary.read_bytes(m2_file, ofsValue))
         x += x_pos
@@ -302,7 +302,7 @@ def model_resize(model_path: str, scaleModifier: float, action: str):
             control_bone_id, nBones, ofsBones = create_Control_Bone(model_path, nBones, ofsBones)
 
     with open(model_path, "rb+") as m2_file:
-        ofsToKeyframe = Binary.get_int_from_bytes(m2_file, ofsBones + control_bone_id * M2Lengths.bone + 72)
+        ofsToKeyframe = Binary.get_int_from_bytes(m2_file, ofsBones + control_bone_id * M2Length.bone + 72)
         ofsValue = Binary.get_int_from_bytes(m2_file, ofsToKeyframe + 4)
         x = float_from_bytes(Binary.read_bytes(m2_file, ofsValue))
         x *= scaleModifier
@@ -327,12 +327,12 @@ def search_valid_bone_id(model_path: str, nBones: int, ofsBones: int) -> int:
     # Ищем подходящую кость с pivot point 0 0 0
     with open(model_path, "rb+") as model:
         for i in range(nBones):
-            parent_bone = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 8, length=2)
-            boneCRC = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 12)
-            Translation_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 28)
-            Rotation_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 48)
-            Scale_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 68)
-            PivotPoint = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 76, length=12)
+            parent_bone = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 8, length=2)
+            boneCRC = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 12)
+            Translation_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 28)
+            Rotation_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 48)
+            Scale_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 68)
+            PivotPoint = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 76, length=12)
 
             if (parent_bone == b'\xFF\xFF' and Translation_nKeyFrame == b'\x00\x00\x00\x00' and Rotation_nKeyFrame == b'\x00\x00\x00\x00'
                     and Scale_nKeyFrame == b'\x00\x00\x00\x00' and PivotPoint == b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
@@ -343,11 +343,11 @@ def search_valid_bone_id(model_path: str, nBones: int, ofsBones: int) -> int:
         # Если не нашлась, ищем подходящую кость с любым pivot point
         if control_bone_id is None:
             for i in range(nBones):
-                parent_bone = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 8, length=2)
-                boneCRC = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 12)
-                Translation_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 28)
-                Rotation_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 48)
-                Scale_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 68)
+                parent_bone = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 8, length=2)
+                boneCRC = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 12)
+                Translation_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 28)
+                Rotation_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 48)
+                Scale_nKeyFrame = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 68)
 
                 if (parent_bone == b'\xFF\xFF' and Translation_nKeyFrame == b'\x00\x00\x00\x00'
                         and Rotation_nKeyFrame == b'\x00\x00\x00\x00' and Scale_nKeyFrame == b'\x00\x00\x00\x00'
@@ -357,17 +357,17 @@ def search_valid_bone_id(model_path: str, nBones: int, ofsBones: int) -> int:
 
         if not control_bone_id is None:
             # Ставим флаг Transformed
-            Binary.write_bytes(model, ofsBones + control_bone_id * M2Lengths.bone + 4, b'\x00\x02\x00\x00')
+            Binary.write_bytes(model, ofsBones + control_bone_id * M2Length.bone + 4, b'\x00\x02\x00\x00')
             # Прописываем CRC 987654321
-            Binary.write_bytes(model, ofsBones + control_bone_id * M2Lengths.bone + 12, b'\xB1\x68\xDE\x3A')
+            Binary.write_bytes(model, ofsBones + control_bone_id * M2Length.bone + 12, b'\xB1\x68\xDE\x3A')
 
             Binary.write_zeros(model)
 
             # Прописываем control_bone_id во все имеющиеся кости с id -1
             for i in range(nBones):
-                parent_bone = Binary.read_bytes(model, ofsBones + i * M2Lengths.bone + 8, length=2)
+                parent_bone = Binary.read_bytes(model, ofsBones + i * M2Length.bone + 8, length=2)
                 if parent_bone == b'\xFF\xFF' and i != control_bone_id:
-                    Binary.write_bytes(model, ofsBones + M2Lengths.bone * i + 8, control_bone_id.to_bytes(2, 'little'))
+                    Binary.write_bytes(model, ofsBones + M2Length.bone * i + 8, control_bone_id.to_bytes(2, 'little'))
 
             # Прописываем keyframes для Timestamps и Values
             # Timestamp
@@ -381,27 +381,27 @@ def search_valid_bone_id(model_path: str, nBones: int, ofsBones: int) -> int:
 
             for offset in OFFSETS_Translation:
                 if (OFFSETS_Translation.index(offset) + 1) % 2 == 1:
-                    Binary.write_bytes(model, ofsBones + M2Lengths.bone * control_bone_id + offset, b'\x01\x00\x00\x00')
+                    Binary.write_bytes(model, ofsBones + M2Length.bone * control_bone_id + offset, b'\x01\x00\x00\x00')
                 if (OFFSETS_Translation.index(offset) + 1) % 2 == 0:
                     last_offset = Binary.write_offset(model)
                     seq_offsets_Translation.append(last_offset[0])
-                    Binary.write_bytes(model, ofsBones + M2Lengths.bone * control_bone_id + offset, last_offset[1])
+                    Binary.write_bytes(model, ofsBones + M2Length.bone * control_bone_id + offset, last_offset[1])
 
             for offset in OFFSETS_Rotation:
                 if (OFFSETS_Rotation.index(offset) + 1) % 2 == 1:
-                    Binary.write_bytes(model, ofsBones + M2Lengths.bone * control_bone_id + offset, b'\x01\x00\x00\x00')
+                    Binary.write_bytes(model, ofsBones + M2Length.bone * control_bone_id + offset, b'\x01\x00\x00\x00')
                 if (OFFSETS_Rotation.index(offset) + 1) % 2 == 0:
                     last_offset = Binary.write_offset(model)
                     seq_offsets_Rotation.append(last_offset[0])
-                    Binary.write_bytes(model, ofsBones + M2Lengths.bone * control_bone_id + offset, last_offset[1])
+                    Binary.write_bytes(model, ofsBones + M2Length.bone * control_bone_id + offset, last_offset[1])
 
             for offset in OFFSETS_Scale:
                 if (OFFSETS_Scale.index(offset) + 1) % 2 == 1:
-                    Binary.write_bytes(model, ofsBones + M2Lengths.bone * control_bone_id + offset, b'\x01\x00\x00\x00')
+                    Binary.write_bytes(model, ofsBones + M2Length.bone * control_bone_id + offset, b'\x01\x00\x00\x00')
                 if (OFFSETS_Scale.index(offset) + 1) % 2 == 0:
                     last_offset = Binary.write_offset(model)
                     seq_offsets_Scale.append(last_offset[0])
-                    Binary.write_bytes(model, ofsBones + M2Lengths.bone * control_bone_id + offset, last_offset[1])
+                    Binary.write_bytes(model, ofsBones + M2Length.bone * control_bone_id + offset, last_offset[1])
 
             # Values
             for seq_offset in seq_offsets_Translation:

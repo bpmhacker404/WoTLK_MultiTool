@@ -13,7 +13,7 @@ from position_scale import auto_fix_helm_offset
 from utils.binary import Binary
 from utils.config import Config
 from utils.miscellaneous import check_model_path, edit_model_name, get_model_type_path
-from utils.offsets import M2Offsets, M2Lengths
+from utils.offsets import M2Offset, M2Length
 from utils.registry import reg_manager
 from utils.statusbar import StatusBar
 
@@ -137,10 +137,10 @@ def auto_texture(separated_name: str, model_type_path: str, file_path: str):
             m2_file.write(b'\00' * deficient_bytes_for_texture)
 
     with open(file_path, "rb+") as m2_file:
-        textures_adress_start = Binary.get_int_from_bytes(m2_file, M2Offsets.ofsTextures)
+        textures_adress_start = Binary.get_int_from_bytes(m2_file, M2Offset.ofsTexs)
         for i, texture in enumerate(all_textures):
             for i2, _ in enumerate(BYTES_INDEXES):
-                m2_file.seek(textures_adress_start + M2Lengths.texture * i + BYTES_INDEXES[i2])
+                m2_file.seek(textures_adress_start + M2Length.texture * i + BYTES_INDEXES[i2])
                 if i2 == 0:
                     m2_file.write(b'\00')
                 elif i2 == 1:
@@ -148,7 +148,7 @@ def auto_texture(separated_name: str, model_type_path: str, file_path: str):
                 elif i2 == 2:
                     m2_file.write(all_textures_offsets[i].to_bytes(4, 'little'))
 
-        Binary.write_bytes(m2_file, M2Offsets.nTextures, len(all_textures).to_bytes(2, 'little'))
+        Binary.write_bytes(m2_file, M2Offset.nTexs, len(all_textures).to_bytes(2, 'little'))
 
     # Удаляем ненужные лодсы и перемещаем все нужные файлы в папку Export
     remove_lod(file_path)
@@ -491,7 +491,7 @@ def overwrite_global_sequences(file_path: str, GlobalSeq_bytes: bytes):
         Binary.write_zeros(file_m2)
         last_offset = Binary.write_to_end(file_m2, GlobalSeq_bytes)
         Binary.write_zeros(file_m2)
-        Binary.write_bytes(file_m2, M2Offsets.ofsGlobalSequences, last_offset.to_bytes(4, byteorder="little"))
+        Binary.write_bytes(file_m2, M2Offset.ofsGlobalSeq, last_offset.to_bytes(4, byteorder="little"))
 
 
 def overwrite_nVies(file_path: str, nViews: int):

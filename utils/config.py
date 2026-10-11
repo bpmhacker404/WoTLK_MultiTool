@@ -21,14 +21,14 @@ class Config:
 
 # ? ---------------------------------------------------------------------------------------------------------------------------------------
 r"""
-python -m nuitka --standalone --onefile --onefile-tempdir-spec="{TEMP}/WoTLK_Multitool_Data" --windows-console-mode=disable --remove-output --include-data-files=C:\Users\bpmhacker\PycharmProjects\WoTLK_MultiTool\ICO.ico=multitool.ico --include-package=comtypes --nofollow-import-to=comtypes.test,comtypes.gen,cv2,cryptography,numpy,tkinter,pydoc --windows-icon-from-ico=C:\Users\bpmhacker\PycharmProjects\WoTLK_MultiTool\ICO.ico C:\Users\bpmhacker\PycharmProjects\WoTLK_MultiTool\WoTLK_MultiTool.py --output-dir=C:\Users\bpmhacker\Desktop 
+python -m nuitka --standalone --onefile --onefile-tempdir-spec="{TEMP}/WoTLK_Multitool_Data" --windows-console-mode=disable --remove-output --include-data-files=C:\Users\bpmhacker\PycharmProjects\WoTLK_MultiTool\ICO.ico=multitool.ico --include-package=comtypes --nofollow-import-to=*.test,comtypes.gen,cv2,cryptography,numpy,tkinter,pydoc --no-deployment-flag=excluded-module-usage --windows-icon-from-ico=C:\Users\bpmhacker\PycharmProjects\WoTLK_MultiTool\ICO.ico C:\Users\bpmhacker\PycharmProjects\WoTLK_MultiTool\WoTLK_MultiTool.py --output-dir=C:\Users\bpmhacker\Desktop 
 """
 
 # // PIL Можно исключить
 # _avif.cp313-win_amd64.pyd
 # _avif.pyi
-# _imagingft.cp313-win_amd64.pyd
-# _imagingft.pyi
+# _imagingft.cp313-win_amd64.pyd  !!
+# _imagingft.pyi !!
 # _imagingmath.cp313-win_amd64.pyd
 # _imagingmath.pyi
 # _webp.cp313-win_amd64.pyd

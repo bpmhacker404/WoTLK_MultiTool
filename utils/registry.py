@@ -31,7 +31,6 @@ class RegistryManager:
             self.autoFixHelmOffset = winreg.QueryValueEx(self.key, "autoFixHelmOffset")[0]
             self.autoMoveFilesToPatch = winreg.QueryValueEx(self.key, "autoMoveFilesToPatch")[0]
             self.listfileFolder = winreg.QueryValueEx(self.key, "ListFileFolderPath")[0]
-            self.mpqEditorFolder = winreg.QueryValueEx(self.key, "mpqEditorFolderPath")[0]
             self.patchFolder = winreg.QueryValueEx(self.key, "patchFolderPath")[0]
             self.wowExportFolder = winreg.QueryValueEx(self.key, "wowExportFolderPath")[0]
         except FileNotFoundError:
@@ -43,7 +42,6 @@ class RegistryManager:
             self.autoFixHelmOffset = 1
             self.autoMoveFilesToPatch = 1
             self.listfileFolder = ""
-            self.mpqEditorFolder = ""
             self.patchFolder = f"C:\\Users\\{os.getlogin()}\\Desktop\\Patch-Ruru-Z.MPQ"
             self.wowExportFolder = f"C:\\Users\\{os.getlogin()}\\wow.export"
 
@@ -53,7 +51,6 @@ class RegistryManager:
             winreg.SetValueEx(self.key, "autoFixHelmOffset", 0, self.key_int, self.autoFixHelmOffset)
             winreg.SetValueEx(self.key, "autoMoveFilesToPatch", 0, self.key_int, self.autoMoveFilesToPatch)
             winreg.SetValueEx(self.key, "listfileFolderPath", 0, self.key_str, self.listfileFolder)
-            winreg.SetValueEx(self.key, "mpqEditorFolderPath", 0, self.key_str, self.mpqEditorFolder)
             winreg.SetValueEx(self.key, "patchFolderPath", 0, self.key_str, self.patchFolder)
             winreg.SetValueEx(self.key, "wowExportFolderPath", 0, self.key_str, self.wowExportFolder)
         finally:
@@ -68,8 +65,6 @@ class RegistryManager:
         autoMoveFilesToPatch_value = str(dpg.get_value("chk_auto_move_files_to_patch"))
         listfile_folder_value = os.path.normpath(dpg.get_value("inp_listfile_folder")).strip('"') if dpg.get_value(
             "inp_listfile_folder") else ''
-        mpqEditor_folder_value = os.path.normpath(dpg.get_value("inp_mpqEditor_folder")).strip('"') if dpg.get_value(
-            "inp_mpqEditor_folder") else ''
         patch_folder_value = os.path.normpath(dpg.get_value("inp_patch_folder")).strip('"')
         wowExport_folder_value = os.path.normpath(dpg.get_value("inp_wowExport_folder")).strip('"')
 
@@ -81,7 +76,6 @@ class RegistryManager:
         winreg.SetValueEx(self.key, "autoFixHelmOffset", 0, self.key_int, self.int_from_bool(autoFixHelmOffset_value))
         winreg.SetValueEx(self.key, "autoMoveFilesToPatch", 0, self.key_int, self.int_from_bool(autoMoveFilesToPatch_value))
         winreg.SetValueEx(self.key, "listfileFolderPath", 0, self.key_str, listfile_folder_value)
-        winreg.SetValueEx(self.key, "mpqEditorFolderPath", 0, self.key_str, mpqEditor_folder_value)
         winreg.SetValueEx(self.key, "patchFolderPath", 0, self.key_str, patch_folder_value)
         winreg.SetValueEx(self.key, "wowExportFolderPath", 0, self.key_str, wowExport_folder_value)
 

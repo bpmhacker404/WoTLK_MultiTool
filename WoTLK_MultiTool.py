@@ -10,7 +10,7 @@ from arrays_keyframes import (create_nBones_pre, create_nColor_pre, create_nGlob
 from color_calculator import ColorCalculator
 from convert_autotexture import (auto_texture_pre, check_auto_move_files_to_patch, delete_last_moved_files, get_icon_name,
                                  move_files_to_patch_pre, select_model_type)
-from csv_editor import edit_csv, format_csv_pre, get_free_id, csv_paste_button
+from parameter_cloner import bone_cloner_init, color_cloner_init, transparency_cloner_init, tex_anim_cloner_init
 from particle_cloner import ParticleCloner, particle_cloner_init
 from position_scale import model_moving_pre, model_resize_pre
 from texture_components import auto_convert_textures_pre, move_texture_components_pre, rename_texture_components
@@ -51,7 +51,7 @@ def mouse_click(_, app_data: tuple):
             case "INP":
                 dpg.set_value(app_data[1], clipboard_value)
                 try_define_model_type()
-            case "INP_cloner" | "CSV":
+            case "INP_cloner":
                 dpg.set_value(app_data[1], clipboard_value)
             case "move_position" | "scale_percent":
                 dpg.set_value(app_data[1], 0)
@@ -89,7 +89,7 @@ def show_options():
         | |/ |/ / /_/ / / / /___/ /| |   / /  / / /_/ / / /_/ / / / / /_/ / /_/ / /  
         |__/|__/\____/_/ /_____/_/ |_|  /_/  /_/\__,_/_/\__/_/ /_/  \____/\____/_/   
                     
-                                                                            version 1.3
+                                                                            version 1.4
                     """)
 
             dpg.add_separator(label="Path to the export folder from wow.export")
@@ -101,9 +101,6 @@ def show_options():
             dpg.add_separator(label="Path to your listfile folder")
             dpg.add_input_text(tag="inp_listfile_folder", width=630)
             dpg.set_value("inp_listfile_folder", reg_manager.listfileFolder)
-            dpg.add_separator(label="Path to Ladik's MPQEditor.exe")
-            dpg.add_input_text(tag="inp_mpqEditor_folder", width=630)
-            dpg.set_value("inp_mpqEditor_folder", reg_manager.mpqEditorFolder)
             dpg.add_separator(label="Miscellaneous")
             dpg.add_checkbox(tag="chk_alwaysOnTop", label="Always on top")
             dpg.set_value("chk_alwaysOnTop", bool(reg_manager.alwaysOnTop))
@@ -268,6 +265,7 @@ with dpg.window(no_resize=True, no_title_bar=True, tag="win_main"):
                            auto_select_all=True, width=280)
         dpg.add_text("<<<", tag="txt_right_arrows")
 
+    # CREATE ARRAYS / KEYFRAMES
     dpg.add_separator(label="CREATE ARRAYS / KEYFRAMES")
     dpg.add_spacer(height=2)
 
@@ -400,22 +398,25 @@ with dpg.window(no_resize=True, no_title_bar=True, tag="win_main"):
         dpg.add_input_float(tag="inp_z_position", format="%.3f", step=0.01, step_fast=0.1, user_data="move_position", width=95)
         dpg.add_button(label="MOVE", tag="btn_move_vertices", width=60, callback=model_moving_pre)
         dpg.add_spacer(width=27)
-        dpg.add_input_int(label=" %", tag="inp_scale_modifier", width=80, step_fast=10, user_data="scale_percent")
+        dpg.add_text("%")
+        dpg.add_input_int(tag="inp_scale_modifier", width=80, step_fast=10, user_data="scale_percent")
         dpg.add_spacer(width=0.5)
         dpg.add_button(label="RESIZE", tag="btn_resize", width=62, height=24, callback=model_resize_pre)
 
     dpg.add_spacer(height=2)
 
-    # PARTICLE CLONER
-    dpg.add_separator(label="PARTICLE CLONER")
+    # PARTICLE / PARAMETER CLONER
+    dpg.add_separator(label="PARTICLE / PARAMETER CLONER")
     dpg.add_spacer(height=2)
-    with dpg.group(horizontal=True, tag="gr_cloner_m2_from"):
-        dpg.add_input_text(tag="inp_m2from", width=571, hint="Path to the source m2 model", user_data="INP_cloner", auto_select_all=True)
-        dpg.add_button(tag="btn_paste_m2_from", label="Paste", width=62, callback=ParticleCloner.paste_btn_m2from)
+    with dpg.group(horizontal=True, tag="gr_cloner_m2from"):
+        dpg.add_input_text(tag="inp_cloner_m2from", width=571, hint="Path to the source m2 model", user_data="INP_cloner",
+                           auto_select_all=True)
+        dpg.add_button(tag="btn_paste_m2from", label="Paste", width=62, callback=ParticleCloner.paste_btn_m2from)
         dpg.add_spacer(height=25)
 
-    with dpg.group(horizontal=True, tag="gr_cloner_m2_to"):
-        dpg.add_input_text(tag="inp_m2to", width=571, hint="Path to the target m2 model", user_data="INP_cloner", auto_select_all=True)
+    with dpg.group(horizontal=True, tag="gr_cloner_m2to"):
+        dpg.add_input_text(tag="inp_cloner_m2to", width=571, hint="Path to the target m2 model", user_data="INP_cloner",
+                           auto_select_all=True)
         dpg.add_button(tag="btn_paste_m2to", label="Paste", width=62, callback=ParticleCloner.paste_btn_m2to)
         dpg.add_spacer(height=25)
 
@@ -431,6 +432,52 @@ with dpg.window(no_resize=True, no_title_bar=True, tag="win_main"):
         dpg.add_checkbox(tag="chk_do_not_copy_enabledin", label="Do not copy 'enabledin'", default_value=False)
 
     dpg.add_spacer(height=2)
+    dpg.add_separator()
+    dpg.add_spacer(height=2)
+
+    with dpg.group(horizontal=True, tag="gr_bone_cloner"):
+        dpg.add_text(" Bones")
+        dpg.add_spacer(width=6)
+        dpg.add_input_text(tag="inp_bone_from", width=55, hint="FROM ID", auto_select_all=True)
+        dpg.add_input_text(tag="inp_bone_to", width=55, hint="TO ID", auto_select_all=True)
+        dpg.add_checkbox(tag="chk_bone_cloner_Translation", label="Translation", default_value=True)
+        dpg.add_checkbox(tag="chk_bone_cloner_Rotation", label="Rotation", default_value=True)
+        dpg.add_checkbox(tag="chk_bone_cloner_Scale", label="Scale", default_value=True)
+        dpg.add_checkbox(tag="chk_bone_cloner_PivotPoint", label="PivotPoint", default_value=True)
+        dpg.add_spacer(width=19)
+        dpg.add_button(tag="btn_bone_copy", label="Copy", width=62, callback=bone_cloner_init)
+        dpg.add_spacer(height=25)
+
+    with dpg.group(horizontal=True, tag="gr_color_cloner"):
+        dpg.add_text(" Color")
+        dpg.add_spacer(width=6)
+        dpg.add_input_text(tag="inp_color_from", width=55, hint="FROM ID", auto_select_all=True)
+        dpg.add_input_text(tag="inp_color_to", width=55, hint="TO ID", auto_select_all=True)
+        dpg.add_checkbox(tag="chk_color_cloner_Color", label="Color", default_value=True)
+        dpg.add_spacer(width=34)
+        dpg.add_checkbox(tag="chk_color_cloner_Alpha", label="Alpha", default_value=True)
+        dpg.add_spacer(width=207)
+        dpg.add_button(tag="btn_color_copy", label="Copy", width=62, callback=color_cloner_init)
+        dpg.add_spacer(height=25)
+
+    with dpg.group(horizontal=True, tag="gr_transparency_cloner"):
+        dpg.add_text(" Transp ")
+        dpg.add_input_text(tag="inp_transp_from", width=55, hint="FROM ID", auto_select_all=True)
+        dpg.add_input_text(tag="inp_transp_to", width=55, hint="TO ID", auto_select_all=True)
+        dpg.add_spacer(width=381)
+        dpg.add_button(tag="btn_transp_copy", label="Copy", width=62, callback=transparency_cloner_init)
+        dpg.add_spacer(height=25)
+
+    with dpg.group(horizontal=True, tag="gr_text_anim_cloner"):
+        dpg.add_text(" TexAnim")
+        dpg.add_input_text(tag="inp_tex_anim_from", width=55, hint="FROM ID", auto_select_all=True)
+        dpg.add_input_text(tag="inp_tex_anim_to", width=55, hint="TO ID", auto_select_all=True)
+        dpg.add_checkbox(tag="chk_tex_anim_cloner_Translation", label="Translation", default_value=True)
+        dpg.add_checkbox(tag="chk_tex_anim_cloner_Rotation", label="Rotation", default_value=True)
+        dpg.add_checkbox(tag="chk_tex_anim_cloner_Scale", label="Scale", default_value=True)
+        dpg.add_spacer(width=120)
+        dpg.add_button(tag="btn_tex_anim_copy", label="Copy", width=62, callback=tex_anim_cloner_init)
+        dpg.add_spacer(height=25)
 
     # TEXTURE COMPONENTS
     dpg.add_separator(label="TEXTURE COMPONENTS")
@@ -445,32 +492,6 @@ with dpg.window(no_resize=True, no_title_bar=True, tag="win_main"):
         dpg.add_checkbox(tag="chk_auto_reduce_png", label="Reduce large textures", default_value=True)
 
     dpg.add_spacer(height=2)
-
-    # CSV EDITOR / EZWOW INTEGRATION
-    dpg.add_separator(label="CSV EDITOR / EZWOW INTEGRATION")
-    dpg.add_spacer(height=2)
-    with dpg.group(horizontal=True, parent="win_main", tag="gr_csv_editor"):
-        dpg.add_input_text(tag="inp_csv", width=571, hint="Path to the csv file", user_data="CSV", auto_select_all=True)
-        dpg.add_button(tag="btn_csv_paste", label="Paste", width=62, callback=csv_paste_button)
-        dpg.add_spacer(height=25)
-
-    with dpg.group(horizontal=True, parent="win_main", tag="gr_csv_editor_range"):
-        dpg.add_text(" FROM")
-        dpg.add_input_text(tag="inp_from", width=70, hint="AUTO")
-        dpg.add_text(" TO")
-        dpg.add_input_text(tag="inp_to", width=70, hint="END")
-        dpg.add_text(" OFFSET")
-        dpg.add_input_text(tag="inp_offset", width=70, hint="AUTO")
-        dpg.add_text(" COLUMN ID")
-        dpg.add_input_text(tag="inp_column", width=85)
-        dpg.add_spacer(width=37)
-        dpg.add_button(tag="btn_edit", label="EDIT", width=62, height=25, callback=lambda: async_manager.run_unique_task(edit_csv()))
-
-    with dpg.group(horizontal=True, parent="win_main", tag="gr_csv_editor_btn"):
-        dpg.add_button(tag="btn_format", label="FORMAT CSV", width=90, height=25,
-                       callback=lambda: async_manager.run_unique_task(format_csv_pre()))
-        dpg.add_button(tag="btn_get_free_id", label="GET FREE ID", width=90, height=25, callback=get_free_id)
-        dpg.add_spacer(height=30)
 
     # STATUSBAR
     dpg.add_button(label=" * ", pos=[Config.WINDOW_WIDTH - 50, Config.WINDOW_HEIGHT - 66], tag="btn_options", callback=show_options)
@@ -487,9 +508,8 @@ with dpg.window(no_resize=True, no_title_bar=True, tag="win_main"):
                    "inp_y_color",
                    "inp_z_color",
                    "inp_model",
-                   "inp_m2from",
-                   "inp_m2to",
-                   "inp_csv",
+                   "inp_cloner_m2from",
+                   "inp_cloner_m2to",
                    "inp_x_position",
                    "inp_y_position",
                    "inp_z_position",

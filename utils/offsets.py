@@ -1,28 +1,28 @@
 from enum import IntEnum
 
 
-class M2Offsets(IntEnum):
+class M2Offset(IntEnum):
     # Длина 4 байта
     mdMagic = 0
     globalFlags = 16
-    nGlobalSequences = 20
-    ofsGlobalSequences = 24
+    nGlobalSeq = 20
+    ofsGlobalSeq = 24
     nAnimations = 28
-    ofsAnimations = 32
-    nAnimationLookup = 36
-    ofsAnimationLookup = 40
+    ofsAnims = 32
+    nAnimLookup = 36
+    ofsAnimLookup = 40
     nBones = 44
     ofsBones = 48
     nViews = 68
     nColors = 72
     ofsColors = 76
-    pivotPoint = 76
-    nTextures = 80
-    ofsTextures = 84
-    nTransparency = 88
-    ofsTransparency = 92
-    nTextureAnimations = 96
-    ofsTextureAnimations = 100
+    pivotPnt = 76
+    nTexs = 80
+    ofsTexs = 84
+    nTransp = 88
+    ofsTransp = 92
+    nTexAnims = 96
+    ofsTexAnims = 100
     nMaterials = 112
     ofsMaterials = 116
     nBoneLookupTable = 120
@@ -33,23 +33,23 @@ class M2Offsets(IntEnum):
     ofsTransLookup = 148
     nTexAnimLookup = 152
     ofsTexAnimLookup = 156
-    nParticleEmitters = 296
-    ofsParticleEmitters = 300
-    nTextureCombiner = 304
-    ofsTextureCombiner = 308
+    nPrtclEmitters = 296
+    ofsPrtclEmitters = 300
+    nTexCombiner = 304
+    ofsTexCombiner = 308
 
 
-class M2Lengths(IntEnum):
+class M2Length(IntEnum):
     material = 4
-    pivotPoint = 12
+    pivotPnt = 12
     texture = 16
-    transparency = 20
+    transp = 20
     color = 40
-    textureAnimation = 60
-    animation = 64
+    texAnim = 60
+    anim = 64
     bone = 88
     particle = 476
 
 
-class SkinOffsets(IntEnum):
+class SkinOffset(IntEnum):
     pass

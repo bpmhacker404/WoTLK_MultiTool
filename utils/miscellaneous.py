@@ -96,7 +96,6 @@ def download_listfile():
                     StatusBar.success_info("Downloading new listfile: " + str(percent) + " %")
 
             StatusBar.success_info("community-listfile.csv downloaded successfully.")
-
     except requests.exceptions.RequestException:
         StatusBar.error_info("ERROR: community-listfile.csv failed to download.")
 
