@@ -41,12 +41,12 @@ class M2Offset(IntEnum):
 
 class M2Length(IntEnum):
     material = 4
-    pivotPnt = 12
+    pivotPnt = 12  # pivot point
     texture = 16
-    transp = 20
+    transp = 20  # transparency
     color = 40
-    texAnim = 60
-    anim = 64
+    texAnim = 60  # texture animation
+    anim = 64  # animation
     bone = 88
     prtcl = 476  # particle
 
