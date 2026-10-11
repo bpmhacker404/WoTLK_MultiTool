@@ -200,7 +200,7 @@ class ParticleCloner:
         if not self.saveExistingParticles:
             with open(self.m2To, "rb+") as model_m2to:
                 Binary.write_zeros(model_m2to)
-                self.prtclsAddrM2To = Binary.write_to_end(model_m2to, b'\x00' * self.nPrtclsM2From * M2Length.particle)
+                self.prtclsAddrM2To = Binary.write_to_end(model_m2to, b'\x00' * self.nPrtclsM2From * M2Length.prtcl)
                 Binary.write_zeros(model_m2to)
                 # *Вставляем скопированные текстуры в конец файла
                 self.texsNewAddrM2To = Binary.write_to_end(model_m2to, self.existedTexM2To)
@@ -220,9 +220,9 @@ class ParticleCloner:
                     Binary.write_zeros(model_m2to)
                     existing_particles_address = Binary.get_int_from_bytes(model_m2to, M2Offset.ofsPrtclEmitters)
                     existing_particles_bytes = Binary.read_bytes(model_m2to, existing_particles_address,
-                                                                 M2Length.particle * self.nPrtclsM2To)
+                                                                 M2Length.prtcl * self.nPrtclsM2To)
                     existing_particles_new_address = Binary.write_to_end(model_m2to, existing_particles_bytes)
-                    self.prtclsAddrM2To = Binary.write_to_end(model_m2to, b'\x00' * self.nPrtclsM2From * M2Length.particle)
+                    self.prtclsAddrM2To = Binary.write_to_end(model_m2to, b'\x00' * self.nPrtclsM2From * M2Length.prtcl)
                     Binary.write_zeros(model_m2to)
                     # *Вставляем скопированные текстуры в конец файла
                     self.texsNewAddrM2To = Binary.write_to_end(model_m2to, self.existedTexM2To)
@@ -259,7 +259,7 @@ class ParticleCloner:
         ALL_subindex = -1
         for i in range(self.nPrtclsM2From):
             with open(self.m2From, "rb") as model_m2from:  # * сопоставляем id костей ------------------------------------------------------
-                particle_parent_bone_m2from = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.particle * i + 20,
+                particle_parent_bone_m2from = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.prtcl * i + 20,
                                                                         length=2)
                 key_bone_id = self.get_key_bone_id(model_m2from, particle_parent_bone_m2from)
                 if key_bone_id in self.keyBoneIdsM2From:
@@ -277,17 +277,17 @@ class ParticleCloner:
                     ALL_subindex += 1
                     with open(self.m2From, "rb") as model_m2from:
                         numbOfTsPairs, numbOfTsPairs_bytes = Binary.get_int_and_bytes(model_m2from, self.prtclsAddrM2From +
-                                                                                      M2Length.particle * i + self.PRTCL_IDXS[i2])
+                                                                                      M2Length.prtcl * i + self.PRTCL_IDXS[i2])
                         numbOfTsPairs_m2from[i][ALL_subindex].append(numbOfTsPairs)
 
                         ts_offset, ts_offset_bytes = Binary.get_int_and_bytes(model_m2from, self.prtclsAddrM2From +
-                                                                              M2Length.particle * i + self.PRTCL_IDXS[i2] + 4)
+                                                                              M2Length.prtcl * i + self.PRTCL_IDXS[i2] + 4)
                         numbOfKfPairs, numbOfKfPairs_bytes = Binary.get_int_and_bytes(model_m2from, self.prtclsAddrM2From +
-                                                                                      M2Length.particle * i + self.PRTCL_IDXS[i2] + 8)
+                                                                                      M2Length.prtcl * i + self.PRTCL_IDXS[i2] + 8)
                         numbOfKfPairs_m2from[i][ALL_subindex].append(numbOfKfPairs)
 
                         val_offset, val_offset_bytes = Binary.get_int_and_bytes(model_m2from, self.prtclsAddrM2From +
-                                                                                M2Length.particle * i + self.PRTCL_IDXS[i2] + 12)
+                                                                                M2Length.prtcl * i + self.PRTCL_IDXS[i2] + 12)
                     if i2 == 30:
                         with open(self.m2To, "ab") as model_m2to:
                             last_offset1 = Binary.write_to_end(model_m2to, b'\x00' * 2 * numbOfTsPairs)
@@ -326,7 +326,7 @@ class ParticleCloner:
                     if ALL_subindex == 14: ALL_subindex = -1
                 else:
                     with open(self.m2From, "rb") as model_m2from:
-                        self.DATA_m2from[i2].append(Binary.read_bytes(model_m2from, self.prtclsAddrM2From + M2Length.particle * i +
+                        self.DATA_m2from[i2].append(Binary.read_bytes(model_m2from, self.prtclsAddrM2From + M2Length.prtcl * i +
                                                                       self.PRTCL_IDXS[i2], self.PRTCL_OFFS[i2]))
 
             # * Присваиваем id костям -----------------------------------------------------------------------------------------------------
@@ -446,8 +446,7 @@ class ParticleCloner:
         with open(self.m2From, "rb") as model_m2from:
             for i in range(self.nPrtclsM2From):
                 for i2, _ in enumerate(Ts_Val_offset[i]):
-                    # Копируем все timestamp->values в лист Ts_Final_Ts_bytes
-                    # и все Values->values в лист Values_Final_Val_bytes
+                    # Копируем все timestamp->values в лист Ts_Final_Ts_bytes и все Values->values в лист Values_Final_Val_bytes
                     if i2 == 10:
                         ts_val_bytes = Binary.read_bytes(model_m2from, int(*Ts_Val_offset[i][i2]), 2 * int(*Ts_Val[i][i2]))
                         Ts_Final_Ts_bytes[i][i2].append(ts_val_bytes)
@@ -537,8 +536,7 @@ class ParticleCloner:
         with open(self.m2To, "rb+") as model_m2to:
             for i in range(self.nPrtclsM2From):
                 for i2, _ in enumerate(self.PRTCL_IDXS):
-                    Binary.write_bytes(model_m2to, self.prtclsAddrM2To + M2Length.particle * i + self.PRTCL_IDXS[i2],
-                                       self.DATA_m2from[i2][i])
+                    Binary.write_bytes(model_m2to, self.prtclsAddrM2To + M2Length.prtcl * i + self.PRTCL_IDXS[i2], self.DATA_m2from[i2][i])
 
         with open(self.m2To, "rb+") as model_m2to:
             for i in range(self.nPrtclsM2From):
@@ -601,20 +599,20 @@ class ParticleCloner:
             return full_ts_bytes
 
         def writing_ts_and_val_modelTo(model_m2to_: BinaryIO, i_: int, pos1: int, pos2: int):
-            Binary.write_bytes(model_m2to_, self.prtclsAddrM2To + M2Length.particle * i_ + pos1, self.nAnimsM2To_bytes)
+            Binary.write_bytes(model_m2to_, self.prtclsAddrM2To + M2Length.prtcl * i_ + pos1, self.nAnimsM2To_bytes)
             enabledin_last_offset = Binary.write_to_end(model_m2to_, b'\x00' * 8 * self.nAnimsM2To)
-            Binary.write_bytes(model_m2to_, self.prtclsAddrM2To + M2Length.particle * i_ + pos2,
+            Binary.write_bytes(model_m2to_, self.prtclsAddrM2To + M2Length.prtcl * i_ + pos2,
                                enabledin_last_offset.to_bytes(4, byteorder='little'))
 
         def writing_one_zero_m2To(model_m2to_: BinaryIO, enum_: int, pos: int, n_: int):
             last_Ts_Offset_ = Binary.write_to_end(model_m2to_, b'\x00' * 4)
-            ts_offset = Binary.get_int_from_bytes(model_m2to_, self.prtclsAddrM2To + M2Length.particle * enum_ + pos)
+            ts_offset = Binary.get_int_from_bytes(model_m2to_, self.prtclsAddrM2To + M2Length.prtcl * enum_ + pos)
             Binary.write_bytes(model_m2to_, ts_offset + 8 * n_, b'\x01\x00\x00\x00')
             Binary.write_bytes(model_m2to_, ts_offset + 8 * n_ + 4, last_Ts_Offset_.to_bytes(4, byteorder='little'))
 
         # Определяем число анимаций и их адрес в m2From -----------------------------------------------------------------------------------
         with open(self.m2From, 'rb') as model_m2from:
-            self.nAnimsM2From = Binary.get_int_from_bytes(model_m2from, M2Offset.nAnimations)
+            self.nAnimsM2From = Binary.get_int_from_bytes(model_m2from, M2Offset.nAnim)
             self.animsAddrM2From = Binary.get_int_from_bytes(model_m2from, M2Offset.ofsAnims)
 
         # Создаем необходимые списки
@@ -643,13 +641,13 @@ class ParticleCloner:
         with open(self.m2From, "rb") as model_m2from:
             for i in range(self.nPrtclsM2From):
                 enabledin_numbOfTsPairs, enabledin_numbOfTsPairs_bytes = Binary.get_int_and_bytes(model_m2from, self.prtclsAddrM2From +
-                                                                                                  M2Length.particle * i + 460)
+                                                                                                  M2Length.prtcl * i + 460)
                 # Если блок enabledin не пустой и больше 1, добавляем число кейфреймов в соответствующий id частицы
                 if enabledin_numbOfTsPairs_bytes > b'\x01\x00\x00\x00':
                     enabledin_Ts_Kf.append(enabledin_numbOfTsPairs)
                     # Берем значения timestamps и keyframes офсетов и добавляем их в списки
-                    offsetToTsPairs = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.particle * i + 464)
-                    offsetToKfPairs = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.particle * i + 472)
+                    offsetToTsPairs = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.prtcl * i + 464)
+                    offsetToKfPairs = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.prtcl * i + 472)
                     sub_Index = 0
                     for n_seq in range(enabledin_numbOfTsPairs):
                         # Собираем timestamps
@@ -682,8 +680,8 @@ class ParticleCloner:
                 elif enabledin_numbOfTsPairs_bytes == b'\x01\x00\x00\x00':
                     enabledin_Ts_Kf.append(enabledin_numbOfTsPairs)
                     # Берем значения timestamps и keyframes офсетов и добавляем их в списки
-                    offsetToTsPairs = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.particle * i + 464)
-                    offsetToKfPairs = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.particle * i + 472)
+                    offsetToTsPairs = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.prtcl * i + 464)
+                    offsetToKfPairs = Binary.get_int_from_bytes(model_m2from, self.prtclsAddrM2From + M2Length.prtcl * i + 472)
                     sub_Index = 0
                     for n_seq in range(enabledin_numbOfTsPairs):
                         # Собираем timestamps
@@ -731,7 +729,7 @@ class ParticleCloner:
 
         # * Определяем количество анимаций и их адреса в целевой модели
         with open(self.m2To, "rb") as model_m2to:
-            self.nAnimsM2To, self.nAnimsM2To_bytes = Binary.get_int_and_bytes(model_m2to, M2Offset.nAnimations)
+            self.nAnimsM2To, self.nAnimsM2To_bytes = Binary.get_int_and_bytes(model_m2to, M2Offset.nAnim)
             self.animsAddrM2To = Binary.get_int_from_bytes(model_m2to, M2Offset.ofsAnims)
             for anim in range(self.nAnimsM2To):
                 SubAnimID = str(Binary.get_int_from_bytes(model_m2to, self.animsAddrM2To + M2Length.anim * anim + 2, length=2))
@@ -774,20 +772,16 @@ class ParticleCloner:
         with open(self.m2To, "rb+") as model_m2to:
             for i, kf in enumerate(enabledin_Ts_Kf):
                 if kf != 0:
-                    # Timestamps
-                    writing_ts_and_val_modelTo(model_m2to, i, 460, 464)
-                    # Values
-                    writing_ts_and_val_modelTo(model_m2to, i, 468, 472)
+                    writing_ts_and_val_modelTo(model_m2to, i, 460, 464)  # Timestamps
+                    writing_ts_and_val_modelTo(model_m2to, i, 468, 472)  # Values
 
         # Прописываем во все Timestamp->Sequence 1 и 0 и Values->Sequence 1 и 0 в целевой модели
         with open(self.m2To, "rb+") as model_m2to:
             for enum, i in enumerate(enabledin_Ts_Kf):
                 if i != 0:
                     for n in range(self.nAnimsM2To):
-                        # Timestamps
-                        writing_one_zero_m2To(model_m2to, enum, 464, n)
-                        # Values
-                        writing_one_zero_m2To(model_m2to, enum, 472, n)
+                        writing_one_zero_m2To(model_m2to, enum, 464, n)  # Timestamps
+                        writing_one_zero_m2To(model_m2to, enum, 472, n)  # Values
 
         # Вставляем в имеющиеся id значения Timestamps из списка
         with open(self.m2To, "rb+") as model_m2to:
@@ -798,7 +792,7 @@ class ParticleCloner:
                             if ts_array[0] in anims_id_link and anims_id_link[ts_array[0]] == n and ts_array[0] == val[0]:
                                 last_Ts_Offset = Binary.write_to_end(model_m2to, val[1])
 
-                                ts_offset1 = Binary.get_int_from_bytes(model_m2to, self.prtclsAddrM2To + M2Length.particle * i + 464)
+                                ts_offset1 = Binary.get_int_from_bytes(model_m2to, self.prtclsAddrM2To + M2Length.prtcl * i + 464)
                                 Binary.write_bytes(model_m2to, ts_offset1 + 8 * n, ts_array[2].to_bytes(4, byteorder='little'))
                                 Binary.write_bytes(model_m2to, ts_offset1 + 8 * n + 4, last_Ts_Offset.to_bytes(4, byteorder='little'))
 
@@ -811,7 +805,7 @@ class ParticleCloner:
                             if val_array[0] in anims_id_link and anims_id_link[val_array[0]] == n and val_array[0] == val2[0]:
                                 last_Ts_Offset3 = Binary.write_to_end(model_m2to, val2[1])
 
-                                ts_offset4 = Binary.get_int_from_bytes(model_m2to, self.prtclsAddrM2To + M2Length.particle * i + 472)
+                                ts_offset4 = Binary.get_int_from_bytes(model_m2to, self.prtclsAddrM2To + M2Length.prtcl * i + 472)
                                 Binary.write_bytes(model_m2to, ts_offset4 + 8 * n, val_array[2].to_bytes(4, byteorder='little'))
                                 Binary.write_bytes(model_m2to, ts_offset4 + 8 * n + 4, last_Ts_Offset3.to_bytes(4, byteorder='little'))
 
@@ -849,7 +843,7 @@ class ParticleCloner:
                 if bone_id:
                     new_pos = Binary.read_bytes(model_m2to, self.bonesAddrM2To + M2Length.bone * bone_id + M2Offset.pivotPnt,
                                                 length=M2Length.pivotPnt)
-                    Binary.write_bytes(model_m2to, self.prtclsAddrM2To + M2Length.particle * i + 8, new_pos)
+                    Binary.write_bytes(model_m2to, self.prtclsAddrM2To + M2Length.prtcl * i + 8, new_pos)
 
     def copy_missing_textures_to_patch_folder(self, missing_tex_: bytes):
         tex_path_ = missing_tex_.decode("utf-8").strip("\x00")

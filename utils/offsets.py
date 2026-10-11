@@ -7,7 +7,7 @@ class M2Offset(IntEnum):
     globalFlags = 16
     nGlobalSeq = 20
     ofsGlobalSeq = 24
-    nAnimations = 28
+    nAnim = 28
     ofsAnims = 32
     nAnimLookup = 36
     ofsAnimLookup = 40
@@ -48,7 +48,7 @@ class M2Length(IntEnum):
     texAnim = 60
     anim = 64
     bone = 88
-    particle = 476
+    prtcl = 476  # particle
 
 
 class SkinOffset(IntEnum):

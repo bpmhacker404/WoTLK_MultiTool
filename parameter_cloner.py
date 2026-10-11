@@ -52,29 +52,29 @@ class BoneCloner(ParameterCloner):
         self.m2FromOfsBones = 0
         self.m2ToOfsBones = 0
 
-        self.translation_interp_global_seq_id_bytes = None
-        self.translation_ts_n_val = []
-        self.translation_ts_ofs_val = []
-        self.translation_ts_seq_bytes = []
-        self.translation_val_n_val = []
-        self.translation_val_ofs_val = []
-        self.translation_val_seq_bytes = []
+        self.transl_interp_global_seq_id_bytes = None
+        self.transl_ts_n_val = []
+        self.transl_ts_ofs_val = []
+        self.transl_ts_seq_bytes = []
+        self.transl_val_n_val = []
+        self.transl_val_ofs_val = []
+        self.transl_val_seq_bytes = []
 
-        self.rotation_interp_global_seq_id_bytes = None
-        self.rotation_ts_n_val = []
-        self.rotation_ts_ofs_val = []
-        self.rotation_ts_seq_bytes = []
-        self.rotation_val_n_val = []
-        self.rotation_val_ofs_val = []
-        self.rotation_val_seq_bytes = []
+        self.rot_interp_global_seq_id_bytes = None
+        self.rot_ts_n_val = []
+        self.rot_ts_ofs_val = []
+        self.rot_ts_seq_bytes = []
+        self.rot_val_n_val = []
+        self.rot_val_ofs_val = []
+        self.rot_val_seq_bytes = []
 
-        self.scaling_interp_global_seq_id_bytes = None
-        self.scaling_ts_n_val = []
-        self.scaling_ts_ofs_val = []
-        self.scaling_ts_seq_bytes = []
-        self.scaling_val_n_val = []
-        self.scaling_val_ofs_val = []
-        self.scaling_val_seq_bytes = []
+        self.scal_interp_global_seq_id_bytes = None
+        self.scal_ts_n_val = []
+        self.scal_ts_ofs_val = []
+        self.scal_ts_seq_bytes = []
+        self.scal_val_n_val = []
+        self.scal_val_ofs_val = []
+        self.scal_val_seq_bytes = []
 
         self.pivot_pnt_bytes = None
 
@@ -129,23 +129,23 @@ class BoneCloner(ParameterCloner):
 
             self.m2FromOfsBones = Binary.get_int_from_bytes(model_m2from, M2Offset.ofsBones)
 
-            translation_n_ts_pairs = Binary.get_int_from_bytes(model_m2from, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 20)
-            translation_n_kf_pairs = Binary.get_int_from_bytes(model_m2from, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 28)
+            transl_n_ts_pairs = Binary.get_int_from_bytes(model_m2from, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 20)
+            transl_n_kf_pairs = Binary.get_int_from_bytes(model_m2from, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 28)
             rotation_n_ts_pairs = Binary.get_int_from_bytes(model_m2from, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 40)
             rotation_n_kf_pairs = Binary.get_int_from_bytes(model_m2from, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 48)
             scaling_n_ts_pairs = Binary.get_int_from_bytes(model_m2from, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 60)
             scaling_n_kf_pairs = Binary.get_int_from_bytes(model_m2from, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 68)
 
-            if (translation_n_ts_pairs < 1 and translation_n_kf_pairs < 1 and rotation_n_ts_pairs < 1 and
+            if (transl_n_ts_pairs < 1 and transl_n_kf_pairs < 1 and rotation_n_ts_pairs < 1 and
                     rotation_n_kf_pairs < 1 and scaling_n_ts_pairs < 1 and scaling_n_kf_pairs < 1):
                 StatusBar.error_info(f"ERROR: Nothing to copy. Bone {self.boneIdFrom} is empty.")
                 return
 
             # ? В зависимости от чекбоксов и наличия keyframes копируем и вставляем значения ----------------------------------------------
-            if dpg.get_value("chk_bone_cloner_Translation") and translation_n_ts_pairs > 0 and translation_n_kf_pairs > 0:
-                self._bone_copy_translation(model_m2from, translation_n_ts_pairs, translation_n_kf_pairs)
+            if dpg.get_value("chk_bone_cloner_Translation") and transl_n_ts_pairs > 0 and transl_n_kf_pairs > 0:
+                self._bone_copy_translation(model_m2from, transl_n_ts_pairs, transl_n_kf_pairs)
                 if self.isSameModel:
-                    self._bone_paste_translation(model_m2from, self.m2FromOfsBones, translation_n_ts_pairs, translation_n_kf_pairs)
+                    self._bone_paste_translation(model_m2from, self.m2FromOfsBones, transl_n_ts_pairs, transl_n_kf_pairs)
 
             if dpg.get_value("chk_bone_cloner_Rotation") and rotation_n_ts_pairs > 0 and rotation_n_kf_pairs > 0:
                 self._bone_copy_rotation(model_m2from, rotation_n_ts_pairs, rotation_n_kf_pairs)
@@ -166,8 +166,8 @@ class BoneCloner(ParameterCloner):
         # ? Если модели разные вставляем уже в другую модель ------------------------------------------------------------------------------
         if not self.isSameModel:
             with open(self.m2To, "rb+") as model_m2to:
-                if dpg.get_value("chk_bone_cloner_Translation") and translation_n_ts_pairs > 0 and translation_n_kf_pairs > 0:
-                    self._bone_paste_translation(model_m2to, self.m2ToOfsBones, translation_n_ts_pairs, translation_n_kf_pairs)
+                if dpg.get_value("chk_bone_cloner_Translation") and transl_n_ts_pairs > 0 and transl_n_kf_pairs > 0:
+                    self._bone_paste_translation(model_m2to, self.m2ToOfsBones, transl_n_ts_pairs, transl_n_kf_pairs)
 
                 if dpg.get_value("chk_bone_cloner_Rotation") and rotation_n_ts_pairs > 0 and rotation_n_kf_pairs > 0:
                     self._bone_paste_rotation(model_m2to, self.m2ToOfsBones, rotation_n_ts_pairs, rotation_n_kf_pairs)
@@ -181,29 +181,29 @@ class BoneCloner(ParameterCloner):
         StatusBar.success_info(f"Bone {self.boneIdFrom} -> {self.boneIdTo} copied successfully.")
 
     def _bone_copy_translation(self, model_: BinaryIO, number_of_timestamp_pairs_: int, number_of_keyframe_pairs_: int):
-        self.translation_interp_global_seq_id_bytes = Binary.read_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 16)
+        self.transl_interp_global_seq_id_bytes = Binary.read_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 16)
 
         number_of_ts_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 24)
         number_of_kf_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 32)
 
         for i in range(number_of_timestamp_pairs_):
-            self.translation_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
-            self.translation_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
+            self.transl_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
+            self.transl_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
 
         for i_ in range(number_of_keyframe_pairs_):
-            self.translation_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
-            self.translation_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
+            self.transl_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
+            self.transl_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
 
-        for i2 in range(len(self.translation_ts_n_val)):
-            self.translation_ts_seq_bytes.append(
-                Binary.read_bytes(model_, self.translation_ts_ofs_val[i2], self.translation_ts_n_val[i2] * 4))
+        for i2 in range(len(self.transl_ts_n_val)):
+            self.transl_ts_seq_bytes.append(
+                Binary.read_bytes(model_, self.transl_ts_ofs_val[i2], self.transl_ts_n_val[i2] * 4))
 
-        for i2_ in range(len(self.translation_ts_n_val)):
-            self.translation_val_seq_bytes.append(
-                Binary.read_bytes(model_, self.translation_val_ofs_val[i2_], self.translation_val_n_val[i2_] * 12))
+        for i2_ in range(len(self.transl_ts_n_val)):
+            self.transl_val_seq_bytes.append(
+                Binary.read_bytes(model_, self.transl_val_ofs_val[i2_], self.transl_val_n_val[i2_] * 12))
 
     def _bone_paste_translation(self, model_: BinaryIO, OfsBones_: int, number_of_ts_pairs_: int, number_of_kf_pairs_: int):
-        Binary.write_bytes(model_, OfsBones_ + M2Length.bone * self.boneIdTo + 16, self.translation_interp_global_seq_id_bytes)
+        Binary.write_bytes(model_, OfsBones_ + M2Length.bone * self.boneIdTo + 16, self.transl_interp_global_seq_id_bytes)
 
         # numberOfTimestampPairs
         Binary.write_bytes(model_, OfsBones_ + M2Length.bone * self.boneIdTo + 20, number_of_ts_pairs_.to_bytes(4, byteorder='little'))
@@ -225,41 +225,41 @@ class BoneCloner(ParameterCloner):
         Binary.write_zeros(model_)
 
         for i3 in range(number_of_ts_pairs_):  # Timestamps
-            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.translation_ts_n_val[i3].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.transl_ts_n_val[i3].to_bytes(4, byteorder='little'))
             last_offset = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset1 + i3 * 8 + 4, last_offset.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset, self.translation_ts_seq_bytes[i3])
+            Binary.write_bytes(model_, last_offset, self.transl_ts_seq_bytes[i3])
 
         for i3_ in range(number_of_ts_pairs_):  # Values
-            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.translation_val_n_val[i3_].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.transl_val_n_val[i3_].to_bytes(4, byteorder='little'))
             last_offset_ = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset2 + i3_ * 8 + 4, last_offset_.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset_, self.translation_val_seq_bytes[i3_])
+            Binary.write_bytes(model_, last_offset_, self.transl_val_seq_bytes[i3_])
 
         Binary.write_zeros(model_)
 
     def _bone_copy_rotation(self, model_: BinaryIO, number_of_timestamp_pairs_: int, number_of_keyframe_pairs_: int):
-        self.rotation_interp_global_seq_id_bytes = Binary.read_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 36)
+        self.rot_interp_global_seq_id_bytes = Binary.read_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 36)
 
         number_of_ts_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 44)
         number_of_kf_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 52)
 
         for i in range(number_of_timestamp_pairs_):
-            self.rotation_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
-            self.rotation_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
+            self.rot_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
+            self.rot_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
 
         for i_ in range(number_of_keyframe_pairs_):
-            self.rotation_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
-            self.rotation_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
+            self.rot_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
+            self.rot_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
 
-        for i2 in range(len(self.rotation_ts_n_val)):
-            self.rotation_ts_seq_bytes.append(Binary.read_bytes(model_, self.rotation_ts_ofs_val[i2], self.rotation_ts_n_val[i2] * 4))
+        for i2 in range(len(self.rot_ts_n_val)):
+            self.rot_ts_seq_bytes.append(Binary.read_bytes(model_, self.rot_ts_ofs_val[i2], self.rot_ts_n_val[i2] * 4))
 
-        for i2_ in range(len(self.rotation_ts_n_val)):
-            self.rotation_val_seq_bytes.append(Binary.read_bytes(model_, self.rotation_val_ofs_val[i2_], self.rotation_val_n_val[i2_] * 8))
+        for i2_ in range(len(self.rot_ts_n_val)):
+            self.rot_val_seq_bytes.append(Binary.read_bytes(model_, self.rot_val_ofs_val[i2_], self.rot_val_n_val[i2_] * 8))
 
     def _bone_paste_rotation(self, model_: BinaryIO, OfsBones_: int, number_of_ts_pairs_: int, number_of_kf_pairs_: int):
-        Binary.write_bytes(model_, OfsBones_ + M2Length.bone * self.boneIdTo + 36, self.rotation_interp_global_seq_id_bytes)
+        Binary.write_bytes(model_, OfsBones_ + M2Length.bone * self.boneIdTo + 36, self.rot_interp_global_seq_id_bytes)
 
         # numberOfTimestampPairs
         Binary.write_bytes(model_, OfsBones_ + M2Length.bone * self.boneIdTo + 40, number_of_ts_pairs_.to_bytes(4, byteorder='little'))
@@ -281,41 +281,41 @@ class BoneCloner(ParameterCloner):
         Binary.write_zeros(model_)
 
         for i3 in range(number_of_ts_pairs_):  # Timestamps
-            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.rotation_ts_n_val[i3].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.rot_ts_n_val[i3].to_bytes(4, byteorder='little'))
             last_offset = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset1 + i3 * 8 + 4, last_offset.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset, self.rotation_ts_seq_bytes[i3])
+            Binary.write_bytes(model_, last_offset, self.rot_ts_seq_bytes[i3])
 
         for i3_ in range(number_of_ts_pairs_):  # Values
-            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.rotation_val_n_val[i3_].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.rot_val_n_val[i3_].to_bytes(4, byteorder='little'))
             last_offset_ = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset2 + i3_ * 8 + 4, last_offset_.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset_, self.rotation_val_seq_bytes[i3_])
+            Binary.write_bytes(model_, last_offset_, self.rot_val_seq_bytes[i3_])
 
         Binary.write_zeros(model_)
 
     def _bone_copy_scaling(self, model_: BinaryIO, number_of_ts_pairs_: int, number_of_kf_pairs_: int):
-        self.scaling_interp_global_seq_id_bytes = Binary.read_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 56)
+        self.scal_interp_global_seq_id_bytes = Binary.read_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 56)
 
         number_of_ts_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 64)
         number_of_kf_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsBones + M2Length.bone * self.boneIdFrom + 72)
 
         for i in range(number_of_ts_pairs_):
-            self.scaling_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
-            self.scaling_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
+            self.scal_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
+            self.scal_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
 
         for i_ in range(number_of_kf_pairs_):
-            self.scaling_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
-            self.scaling_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
+            self.scal_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
+            self.scal_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
 
-        for i2 in range(len(self.scaling_ts_n_val)):
-            self.scaling_ts_seq_bytes.append(Binary.read_bytes(model_, self.scaling_ts_ofs_val[i2], self.scaling_ts_n_val[i2] * 4))
+        for i2 in range(len(self.scal_ts_n_val)):
+            self.scal_ts_seq_bytes.append(Binary.read_bytes(model_, self.scal_ts_ofs_val[i2], self.scal_ts_n_val[i2] * 4))
 
-        for i2_ in range(len(self.scaling_ts_n_val)):
-            self.scaling_val_seq_bytes.append(Binary.read_bytes(model_, self.scaling_val_ofs_val[i2_], self.scaling_val_n_val[i2_] * 12))
+        for i2_ in range(len(self.scal_ts_n_val)):
+            self.scal_val_seq_bytes.append(Binary.read_bytes(model_, self.scal_val_ofs_val[i2_], self.scal_val_n_val[i2_] * 12))
 
     def _bone_paste_scaling(self, model_: BinaryIO, OfsBones_: int, number_of_ts_pairs_: int, number_of_kf_pairs_: int):
-        Binary.write_bytes(model_, OfsBones_ + M2Length.bone * self.boneIdTo + 56, self.scaling_interp_global_seq_id_bytes)
+        Binary.write_bytes(model_, OfsBones_ + M2Length.bone * self.boneIdTo + 56, self.scal_interp_global_seq_id_bytes)
 
         # numberOfTimestampPairs
         Binary.write_bytes(model_, OfsBones_ + M2Length.bone * self.boneIdTo + 60, number_of_ts_pairs_.to_bytes(4, byteorder='little'))
@@ -337,16 +337,16 @@ class BoneCloner(ParameterCloner):
         Binary.write_zeros(model_)
 
         for i3 in range(number_of_ts_pairs_):  # Timestamps
-            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.scaling_ts_n_val[i3].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.scal_ts_n_val[i3].to_bytes(4, byteorder='little'))
             last_offset = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset1 + i3 * 8 + 4, last_offset.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset, self.scaling_ts_seq_bytes[i3])
+            Binary.write_bytes(model_, last_offset, self.scal_ts_seq_bytes[i3])
 
         for i3_ in range(number_of_ts_pairs_):  # Values
-            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.scaling_val_n_val[i3_].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.scal_val_n_val[i3_].to_bytes(4, byteorder='little'))
             last_offset_ = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset2 + i3_ * 8 + 4, last_offset_.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset_, self.scaling_val_seq_bytes[i3_])
+            Binary.write_bytes(model_, last_offset_, self.scal_val_seq_bytes[i3_])
 
         Binary.write_zeros(model_)
 
@@ -724,29 +724,29 @@ class TexAnimCloner(ParameterCloner):
         self.m2FromOfsTexAnim = 0
         self.m2ToOfsTexAnim = 0
 
-        self.translation_interp_global_seq_id_bytes = None
-        self.translation_ts_n_val = []
-        self.translation_ts_ofs_val = []
-        self.translation_ts_seq_bytes = []
-        self.translation_val_n_val = []
-        self.translation_val_ofs_val = []
-        self.translation_val_seq_bytes = []
+        self.transl_interp_global_seq_id_bytes = None
+        self.transl_ts_n_val = []
+        self.transl_ts_ofs_val = []
+        self.transl_ts_seq_bytes = []
+        self.transl_val_n_val = []
+        self.transl_val_ofs_val = []
+        self.transl_val_seq_bytes = []
 
-        self.rotation_interp_global_seq_id_bytes = None
-        self.rotation_ts_n_val = []
-        self.rotation_ts_ofs_val = []
-        self.rotation_ts_seq_bytes = []
-        self.rotation_val_n_val = []
-        self.rotation_val_ofs_val = []
-        self.rotation_val_seq_bytes = []
+        self.rot_interp_global_seq_id_bytes = None
+        self.rot_ts_n_val = []
+        self.rot_ts_ofs_val = []
+        self.rot_ts_seq_bytes = []
+        self.rot_val_n_val = []
+        self.rot_val_ofs_val = []
+        self.rot_val_seq_bytes = []
 
-        self.scaling_interp_global_seq_id_bytes = None
-        self.scaling_ts_n_val = []
-        self.scaling_ts_ofs_val = []
-        self.scaling_ts_seq_bytes = []
-        self.scaling_val_n_val = []
-        self.scaling_val_ofs_val = []
-        self.scaling_val_seq_bytes = []
+        self.scal_interp_global_seq_id_bytes = None
+        self.scal_ts_n_val = []
+        self.scal_ts_ofs_val = []
+        self.scal_ts_seq_bytes = []
+        self.scal_val_n_val = []
+        self.scal_val_ofs_val = []
+        self.scal_val_seq_bytes = []
 
     def tex_anim_copy_pre(self):
         if not self._get_models_path():
@@ -846,30 +846,30 @@ class TexAnimCloner(ParameterCloner):
         StatusBar.success_info(f"Texture animation {self.texAnimIdFrom} -> {self.texAnimIdTo} copied successfully.")
 
     def _tex_anim_copy_translation(self, model_: BinaryIO, number_of_timestamp_pairs_: int, number_of_keyframe_pairs_: int):
-        self.translation_interp_global_seq_id_bytes = Binary.read_bytes(model_,
-                                                                        self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom)
+        self.transl_interp_global_seq_id_bytes = Binary.read_bytes(model_,
+                                                                   self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom)
 
         number_of_ts_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 8)
         number_of_kf_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 16)
 
         for i in range(number_of_timestamp_pairs_):
-            self.translation_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
-            self.translation_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
+            self.transl_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
+            self.transl_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
 
         for i_ in range(number_of_keyframe_pairs_):
-            self.translation_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
-            self.translation_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
+            self.transl_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
+            self.transl_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
 
-        for i2 in range(len(self.translation_ts_n_val)):
-            self.translation_ts_seq_bytes.append(
-                Binary.read_bytes(model_, self.translation_ts_ofs_val[i2], self.translation_ts_n_val[i2] * 4))
+        for i2 in range(len(self.transl_ts_n_val)):
+            self.transl_ts_seq_bytes.append(
+                Binary.read_bytes(model_, self.transl_ts_ofs_val[i2], self.transl_ts_n_val[i2] * 4))
 
-        for i2_ in range(len(self.translation_ts_n_val)):
-            self.translation_val_seq_bytes.append(
-                Binary.read_bytes(model_, self.translation_val_ofs_val[i2_], self.translation_val_n_val[i2_] * 12))
+        for i2_ in range(len(self.transl_ts_n_val)):
+            self.transl_val_seq_bytes.append(
+                Binary.read_bytes(model_, self.transl_val_ofs_val[i2_], self.transl_val_n_val[i2_] * 12))
 
     def _tex_anim_paste_translation(self, model_: BinaryIO, OfsTexAnim_: int, number_of_ts_pairs_: int, number_of_kf_pairs_: int):
-        Binary.write_bytes(model_, OfsTexAnim_ + M2Length.texAnim * self.texAnimIdTo, self.translation_interp_global_seq_id_bytes)
+        Binary.write_bytes(model_, OfsTexAnim_ + M2Length.texAnim * self.texAnimIdTo, self.transl_interp_global_seq_id_bytes)
 
         # numberOfTimestampPairs
         Binary.write_bytes(model_, OfsTexAnim_ + M2Length.texAnim * self.texAnimIdTo + 4,
@@ -893,42 +893,42 @@ class TexAnimCloner(ParameterCloner):
         Binary.write_zeros(model_)
 
         for i3 in range(number_of_ts_pairs_):  # Timestamps
-            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.translation_ts_n_val[i3].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.transl_ts_n_val[i3].to_bytes(4, byteorder='little'))
             last_offset = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset1 + i3 * 8 + 4, last_offset.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset, self.translation_ts_seq_bytes[i3])
+            Binary.write_bytes(model_, last_offset, self.transl_ts_seq_bytes[i3])
 
         for i3_ in range(number_of_ts_pairs_):  # Values
-            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.translation_val_n_val[i3_].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.transl_val_n_val[i3_].to_bytes(4, byteorder='little'))
             last_offset_ = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset2 + i3_ * 8 + 4, last_offset_.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset_, self.translation_val_seq_bytes[i3_])
+            Binary.write_bytes(model_, last_offset_, self.transl_val_seq_bytes[i3_])
 
         Binary.write_zeros(model_)
 
     def _tex_anim_copy_rotation(self, model_: BinaryIO, number_of_timestamp_pairs_: int, number_of_keyframe_pairs_: int):
-        self.rotation_interp_global_seq_id_bytes = Binary.read_bytes(model_,
-                                                                     self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 20)
+        self.rot_interp_global_seq_id_bytes = Binary.read_bytes(model_,
+                                                                self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 20)
 
         number_of_ts_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 28)
         number_of_kf_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 36)
 
         for i in range(number_of_timestamp_pairs_):
-            self.rotation_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
-            self.rotation_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
+            self.rot_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
+            self.rot_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
 
         for i_ in range(number_of_keyframe_pairs_):
-            self.rotation_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
-            self.rotation_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
+            self.rot_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
+            self.rot_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
 
-        for i2 in range(len(self.rotation_ts_n_val)):
-            self.rotation_ts_seq_bytes.append(Binary.read_bytes(model_, self.rotation_ts_ofs_val[i2], self.rotation_ts_n_val[i2] * 4))
+        for i2 in range(len(self.rot_ts_n_val)):
+            self.rot_ts_seq_bytes.append(Binary.read_bytes(model_, self.rot_ts_ofs_val[i2], self.rot_ts_n_val[i2] * 4))
 
-        for i2_ in range(len(self.rotation_ts_n_val)):
-            self.rotation_val_seq_bytes.append(Binary.read_bytes(model_, self.rotation_val_ofs_val[i2_], self.rotation_val_n_val[i2_] * 8))
+        for i2_ in range(len(self.rot_ts_n_val)):
+            self.rot_val_seq_bytes.append(Binary.read_bytes(model_, self.rot_val_ofs_val[i2_], self.rot_val_n_val[i2_] * 8))
 
     def _tex_anim_paste_rotation(self, model_: BinaryIO, OfsTexAnim_: int, number_of_ts_pairs_: int, number_of_kf_pairs_: int):
-        Binary.write_bytes(model_, OfsTexAnim_ + M2Length.texAnim * self.texAnimIdTo + 20, self.rotation_interp_global_seq_id_bytes)
+        Binary.write_bytes(model_, OfsTexAnim_ + M2Length.texAnim * self.texAnimIdTo + 20, self.rot_interp_global_seq_id_bytes)
 
         # numberOfTimestampPairs
         Binary.write_bytes(model_, OfsTexAnim_ + M2Length.texAnim * self.texAnimIdTo + 24,
@@ -952,42 +952,42 @@ class TexAnimCloner(ParameterCloner):
         Binary.write_zeros(model_)
 
         for i3 in range(number_of_ts_pairs_):  # Timestamps
-            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.rotation_ts_n_val[i3].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.rot_ts_n_val[i3].to_bytes(4, byteorder='little'))
             last_offset = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset1 + i3 * 8 + 4, last_offset.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset, self.rotation_ts_seq_bytes[i3])
+            Binary.write_bytes(model_, last_offset, self.rot_ts_seq_bytes[i3])
 
         for i3_ in range(number_of_ts_pairs_):  # Values
-            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.rotation_val_n_val[i3_].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.rot_val_n_val[i3_].to_bytes(4, byteorder='little'))
             last_offset_ = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset2 + i3_ * 8 + 4, last_offset_.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset_, self.rotation_val_seq_bytes[i3_])
+            Binary.write_bytes(model_, last_offset_, self.rot_val_seq_bytes[i3_])
 
         Binary.write_zeros(model_)
 
     def _tex_anim_copy_scaling(self, model_: BinaryIO, number_of_ts_pairs_: int, number_of_kf_pairs_: int):
-        self.scaling_interp_global_seq_id_bytes = Binary.read_bytes(model_,
-                                                                    self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 40)
+        self.scal_interp_global_seq_id_bytes = Binary.read_bytes(model_,
+                                                                 self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 40)
 
         number_of_ts_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 48)
         number_of_kf_pairs_ofs = Binary.get_int_from_bytes(model_, self.m2FromOfsTexAnim + M2Length.texAnim * self.texAnimIdFrom + 56)
 
         for i in range(number_of_ts_pairs_):
-            self.scaling_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
-            self.scaling_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
+            self.scal_ts_n_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8))
+            self.scal_ts_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_ts_pairs_ofs + i * 8 + 4))
 
         for i_ in range(number_of_kf_pairs_):
-            self.scaling_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
-            self.scaling_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
+            self.scal_val_n_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8))
+            self.scal_val_ofs_val.append(Binary.get_int_from_bytes(model_, number_of_kf_pairs_ofs + i_ * 8 + 4))
 
-        for i2 in range(len(self.scaling_ts_n_val)):
-            self.scaling_ts_seq_bytes.append(Binary.read_bytes(model_, self.scaling_ts_ofs_val[i2], self.scaling_ts_n_val[i2] * 4))
+        for i2 in range(len(self.scal_ts_n_val)):
+            self.scal_ts_seq_bytes.append(Binary.read_bytes(model_, self.scal_ts_ofs_val[i2], self.scal_ts_n_val[i2] * 4))
 
-        for i2_ in range(len(self.scaling_ts_n_val)):
-            self.scaling_val_seq_bytes.append(Binary.read_bytes(model_, self.scaling_val_ofs_val[i2_], self.scaling_val_n_val[i2_] * 12))
+        for i2_ in range(len(self.scal_ts_n_val)):
+            self.scal_val_seq_bytes.append(Binary.read_bytes(model_, self.scal_val_ofs_val[i2_], self.scal_val_n_val[i2_] * 12))
 
     def _tex_anim_paste_scaling(self, model_: BinaryIO, OfsTexAnim_: int, number_of_ts_pairs_: int, number_of_kf_pairs_: int):
-        Binary.write_bytes(model_, OfsTexAnim_ + M2Length.texAnim * self.texAnimIdTo + 40, self.scaling_interp_global_seq_id_bytes)
+        Binary.write_bytes(model_, OfsTexAnim_ + M2Length.texAnim * self.texAnimIdTo + 40, self.scal_interp_global_seq_id_bytes)
 
         # numberOfTimestampPairs
         Binary.write_bytes(model_, OfsTexAnim_ + M2Length.texAnim * self.texAnimIdTo + 44,
@@ -1011,16 +1011,16 @@ class TexAnimCloner(ParameterCloner):
         Binary.write_zeros(model_)
 
         for i3 in range(number_of_ts_pairs_):  # Timestamps
-            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.scaling_ts_n_val[i3].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset1 + i3 * 8, self.scal_ts_n_val[i3].to_bytes(4, byteorder='little'))
             last_offset = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset1 + i3 * 8 + 4, last_offset.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset, self.scaling_ts_seq_bytes[i3])
+            Binary.write_bytes(model_, last_offset, self.scal_ts_seq_bytes[i3])
 
         for i3_ in range(number_of_ts_pairs_):  # Values
-            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.scaling_val_n_val[i3_].to_bytes(4, byteorder='little'))
+            Binary.write_bytes(model_, last_offset2 + i3_ * 8, self.scal_val_n_val[i3_].to_bytes(4, byteorder='little'))
             last_offset_ = model_.seek(0, 2)
             Binary.write_bytes(model_, last_offset2 + i3_ * 8 + 4, last_offset_.to_bytes(4, byteorder='little'))
-            Binary.write_bytes(model_, last_offset_, self.scaling_val_seq_bytes[i3_])
+            Binary.write_bytes(model_, last_offset_, self.scal_val_seq_bytes[i3_])
 
         Binary.write_zeros(model_)
 

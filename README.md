@@ -1,5 +1,5 @@
 <p align="center">
-      <img src="https://i.ibb.co.com/JR1rdsBG/logo.jpg" alt="Logo">
+      <img src="https://i.ibb.co.com/ZpqmBGrD/Wo-TLK-Multi-Tool-Preview.jpg" alt="Logo">
 </p>
 
 <h1 align="center">
@@ -16,8 +16,8 @@ Instantly creates n-th number of blocks (Color, Bones, Textures, Transparency an
 Converts various color formats: hex# is used in graphic editors, DEC (decimal) is used in LightIntBand.dbc, HEX (hexadecimal) is used in 010Editor in the Color block. 
 ## ● MODEL POSITION / SCALE
 Allows you to shift the model along the x, y, z axes (for example, offsetting helmets) and change the model's size. Offset and scale work with any model, even animated ones, and don't cause vertex collapse (possibly the only way to change the size of Warlock pets).
-## ● PARTICLE CLONER
-Full copying of particles from one model to another
+## ● PARTICLE / PARAMETER CLONER
+Full copying of particles from one model to another. Easy copying of parameters, both within a single model and from one model to another.
 ## ● TEXTURE COMPONENTS
 A module for working with textures. It will move all exported textures from the wow.export folder to the patch folder, with the option to automatically convert from DXT5 to Indexed (256Color). It will automatically remove extra digits from texture names.
 # Attention
