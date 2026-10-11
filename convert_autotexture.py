@@ -538,20 +538,6 @@ def rename_lod(file_path: str, nViews: int):
         remove_lod(file_path)
 
 
-def rename_skins(file_path: str):
-    folder = os.path.dirname(file_path) + "\\"
-    skin_files = os.listdir(folder)
-    for skin in skin_files:
-        try:
-            os.rename(os.path.join(folder, skin.lower()), os.path.join(folder, skin.lower().replace("_f0", "f0")))
-        except (FileNotFoundError, FileExistsError):
-            pass
-        try:
-            os.rename(os.path.join(folder, skin.lower()), os.path.join(folder, skin.lower().replace("_m0", "m0")))
-        except (FileNotFoundError, FileExistsError):
-            pass
-
-
 def rename_race_items(model_type_path: str, file_path: str) -> str:
     if model_type_path == r"item\objectcomponents\head":
         rename_skins(file_path)
@@ -571,6 +557,20 @@ def rename_race_items(model_type_path: str, file_path: str) -> str:
                 pass
 
     return file_path
+
+
+def rename_skins(file_path: str):
+    folder = os.path.dirname(file_path) + "\\"
+    skin_files = os.listdir(folder)
+    for skin in skin_files:
+        try:
+            os.rename(os.path.join(folder, skin.lower()), os.path.join(folder, skin.lower().replace("_f0", "f0")))
+        except (FileNotFoundError, FileExistsError):
+            pass
+        try:
+            os.rename(os.path.join(folder, skin.lower()), os.path.join(folder, skin.lower().replace("_m0", "m0")))
+        except (FileNotFoundError, FileExistsError):
+            pass
 
 
 def select_model_type(sender: str):

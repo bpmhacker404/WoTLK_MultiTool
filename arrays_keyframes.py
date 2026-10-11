@@ -33,8 +33,7 @@ def create_nTextureCombiner(model_path: str, add_n_textureCombiner: int):
             StatusBar.error_info("ERROR: Сonvert the model before editing")
             return
 
-        # Проверяем включен ли GlobalFlag
-        flag = Binary.read_bytes(model, M2Offset.globalFlags, length=1)
+        flag = Binary.read_bytes(model, M2Offset.globalFlags, length=1)  # Проверяем включен ли GlobalFlag
 
         if str(flag)[5:-1] in ("8", "9", "A", "B", "C", "D", "E", "F", "nBones", "b", "c", "d", "e", "f"):
             nTextureCombiner = Binary.get_int_from_bytes(model, M2Offset.nTexCombiner)
@@ -60,15 +59,13 @@ def create_nTextureCombiner(model_path: str, add_n_textureCombiner: int):
                     Binary.write_zeros(model)
 
                     new_ofsGlobSeq = model.seek(0, 2)
-                    # Добавляем запас на всякий случай 8шт
-                    model.write(existingGlobSeq + b'\x00\x00\x00\x00' * 8)
+                    model.write(existingGlobSeq + b'\x00\x00\x00\x00' * 8)  # Добавляем запас на всякий случай 8шт
 
                     Binary.write_zeros(model)
 
                     Binary.write_bytes(model, M2Offset.ofsGlobalSeq, new_ofsGlobSeq.to_bytes(4, 'little'))
 
-            # Добавляем флаг TextureCombiner
-            Binary.write_bytes(model, M2Offset.globalFlags, b'\x98')
+            Binary.write_bytes(model, M2Offset.globalFlags, b'\x98')  # Добавляем флаг TextureCombiner
 
             new_ofsTextureCombiner = model.seek(0, 2)
             model.write(b'\x01\x00' * add_n_textureCombiner)
@@ -250,8 +247,7 @@ def create_nBones(model_path: str, add_n_bones: int, add_n_keyframe: int):
 
         Binary.write_zeros(model)
 
-    # Добавляем пункты в BoneLookupTable
-    update_nBoneLookupTable(model_path, add_n_bones)
+    update_nBoneLookupTable(model_path, add_n_bones)  # Добавляем пункты в BoneLookupTable
 
     StatusBar.success_info(f"{add_n_bones} Bones created. Total {nBones + add_n_bones} Bones in model.")
 
@@ -410,8 +406,7 @@ def create_nTransparency(model_path: str, add_n_transparency: int, add_n_keyfram
 
         Binary.write_zeros(model)
 
-    # Добавляем пункты в Translookup
-    update_nTranslookup(model_path, add_n_transparency)
+    update_nTranslookup(model_path, add_n_transparency)  # Добавляем пункты в Translookup
 
     StatusBar.success_info(f"{add_n_transparency} Transparency created. Total {nTransparency + add_n_transparency} Transparency in model.")
 
@@ -459,8 +454,7 @@ def create_nTextures(model_path: str, add_n_textures: int):
 
         Binary.write_zeros(model)
 
-    # Добавляем пункты в TextLookupTable
-    update_nTexLookup(model_path, add_n_textures)
+    update_nTexLookup(model_path, add_n_textures)  # Добавляем пункты в TextLookupTable
 
     StatusBar.success_info(f"{add_n_textures} Textures created. Total {nTextures + add_n_textures} Textures in model.")
 
@@ -637,8 +631,7 @@ def create_nTextureAnimation(model_path: str, add_n_texture_animation: int, add_
                 Binary.write_bytes(model, seq_offset, b'\x01\x00\x00\x00')
                 Binary.write_bytes(model, seq_offset + 4, last_offset)
 
-    # Добавляем пункты в TexAnimLookup
-    update_nTexAnimLookup(model_path, add_n_texture_animation)
+    update_nTexAnimLookup(model_path, add_n_texture_animation)  # Добавляем пункты в TexAnimLookup
 
     StatusBar.success_info(f"{add_n_texture_animation} TextureAnimation created. "
                            f"Total {nTextureAnimation + add_n_texture_animation} TextureAnimation in model.")

@@ -133,7 +133,6 @@ def create_Control_Bone(model_path: str, nBones: int, ofsBones: int) -> tuple:
         else:
             existingBones = b''
 
-        # Дописываем строку нулей в конце файла
         Binary.write_zeros(model)
 
         # Вставляем имеющиеся Bones

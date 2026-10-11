@@ -29,6 +29,33 @@ class ColorCalculator:
         dpg.set_value("inp_hex_bytes", ColorCalculator.hex_to_hex(hex_color))
 
     @staticmethod
+    def hex_to_dec():
+        StatusBar.clear_info()
+
+        hex_color = dpg.get_value("inp_hex_color")
+        try:
+            dec_color = int(hex_color, 16)
+            dpg.set_value("inp_dec_color", dec_color)
+
+            r = (dec_color >> 16) & 255
+            g = (dec_color >> 8) & 255
+            b = dec_color & 255
+
+            dpg.set_value("color_picker", (r, g, b))
+
+            x = round(r / 255, 4)
+            y = round(g / 255, 4)
+            z = round(b / 255, 4)
+
+            dpg.set_value("inp_x_color", x)
+            dpg.set_value("inp_y_color", y)
+            dpg.set_value("inp_z_color", z)
+            dpg.set_value("inp_hex_bytes", ColorCalculator.hex_to_hex(hex_color))
+        except ValueError:
+            if len(hex_color) > 0:
+                StatusBar.error_info("ERROR: Invalid hex# code.")
+
+    @staticmethod
     def dec_to_hex():
         StatusBar.clear_info()
 
@@ -55,33 +82,6 @@ class ColorCalculator:
         except ValueError:
             if len(dpg.get_value("inp_dec_color")) > 0:
                 StatusBar.error_info("ERROR: Invalid dec code.")
-
-    @staticmethod
-    def hex_to_dec():
-        StatusBar.clear_info()
-
-        hex_color = dpg.get_value("inp_hex_color")
-        try:
-            dec_color = int(hex_color, 16)
-            dpg.set_value("inp_dec_color", dec_color)
-
-            r = (dec_color >> 16) & 255
-            g = (dec_color >> 8) & 255
-            b = dec_color & 255
-
-            dpg.set_value("color_picker", (r, g, b))
-
-            x = round(r / 255, 4)
-            y = round(g / 255, 4)
-            z = round(b / 255, 4)
-
-            dpg.set_value("inp_x_color", x)
-            dpg.set_value("inp_y_color", y)
-            dpg.set_value("inp_z_color", z)
-            dpg.set_value("inp_hex_bytes", ColorCalculator.hex_to_hex(hex_color))
-        except ValueError:
-            if len(hex_color) > 0:
-                StatusBar.error_info("ERROR: Invalid hex# code.")
 
     @staticmethod
     def hex_to_hex(hex_color: str) -> str:

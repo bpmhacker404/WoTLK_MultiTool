@@ -92,16 +92,13 @@ class ParticleCloner:
                            16, 8, 16, 16, 100, 4, 4, 4,)
         self.DATA_m2from = (self.idFlagsPos, self.parentBone, self.texs, self.geometryModelLength, self.geometryModelOffset,
                             self.recursionModelLength, self.recursionModelOffset, self.fromBlendingToTextureDimensionsColumns,
-                            self.emissionSpeed, self.emissionSpeedTsKf, self.speedVar, self.speedVarTsKf,
-                            self.verticalRange, self.verticalRangeTsKf, self.horizontalRange,
-                            self.horizontalRangeTsKf, self.gravity, self.gravityTsKf, self.lifespan,
-                            self.lifespanTsKf, self.lifespanVary, self.emissionRate, self.emissionRateTsKf,
-                            self.emissionRateVary, self.emissionAreaLength, self.emissionAreaLengthTsKf,
-                            self.emissionAreaWidth, self.emissionAreaWidthTsKf, self.zSource, self.zSourceTsKf,
-                            self.colorTrackTsKf, self.alphaTrackTsKf, self.scaleTrackTsKf,
-                            self.scaleVary, self.headCellTrackTsKf, self.tailCellTrackTsKf,
-                            self.fromTailLengthToFollowScale2, self.nSplinePoints, self.nSplinePointsOffset,
-                            self.enabledinInterpGlobalId,)
+                            self.emissionSpeed, self.emissionSpeedTsKf, self.speedVar, self.speedVarTsKf, self.verticalRange,
+                            self.verticalRangeTsKf, self.horizontalRange, self.horizontalRangeTsKf, self.gravity, self.gravityTsKf,
+                            self.lifespan, self.lifespanTsKf, self.lifespanVary, self.emissionRate, self.emissionRateTsKf,
+                            self.emissionRateVary, self.emissionAreaLength, self.emissionAreaLengthTsKf, self.emissionAreaWidth,
+                            self.emissionAreaWidthTsKf, self.zSource, self.zSourceTsKf, self.colorTrackTsKf, self.alphaTrackTsKf,
+                            self.scaleTrackTsKf, self.scaleVary, self.headCellTrackTsKf, self.tailCellTrackTsKf,
+                            self.fromTailLengthToFollowScale2, self.nSplinePoints, self.nSplinePointsOffset, self.enabledinInterpGlobalId,)
         # Вспомогательные списки/словари
         self.prtclsTexs = []  # список id текстур использующихся как частицы
         self.missingTexsFullPath = []
