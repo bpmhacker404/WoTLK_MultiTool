@@ -17,7 +17,7 @@ Converts various color formats: hex# is used in graphic editors, DEC (decimal) i
 ## ● MODEL POSITION / SCALE
 Allows you to shift the model along the x, y, z axes (for example, offsetting helmets) and change the model's size. Offset and scale work with any model, even animated ones, and don't cause vertex collapse (possibly the only way to change the size of Warlock pets).
 ## ● PARTICLE / PARAMETER CLONER
-Full copying of particles from one model to another. Easy copying of parameters, both within a single model and from one model to another.
+Full copying of particles from one model to another. Simple copying of complex structures with all nested parameters (Bones, Color, Transparency, TextureAnimation)
 ## ● TEXTURE COMPONENTS
 A module for working with textures. It will move all exported textures from the wow.export folder to the patch folder, with the option to automatically convert from DXT5 to Indexed (256Color). It will automatically remove extra digits from texture names.
 # Attention
