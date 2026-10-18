@@ -17,23 +17,27 @@ from utils.offsets import M2Offset, M2Length
 from utils.registry import reg_manager
 from utils.statusbar import StatusBar
 
-RACES_PREFIXES = ("_be_f", "_be_m", "_bef", "_bem",
-                  "_dr_f", "_dr_m", "_drf", "_drm",
-                  "_dw_f", "_dw_m", "_dwf", "_dwm",
-                  "_gn_f", "_gn_m", "_gnf", "_gnm",
-                  "_hu_f", "_hu_m", "_huf", "_hum",
-                  "_ni_f", "_ni_m", "_nif", "_nim",
-                  "_or_f", "_or_m", "_orf", "_orm",
-                  "_sc_f", "_sc_m", "_scf", "_scm",
-                  "_ta_f", "_ta_m", "_taf", "_tam",
-                  "_tr_f", "_tr_m", "_trf", "_trm",)
+RACES_PREFIXES = (
+    "_be_f", "_be_m", "_bef", "_bem",
+    "_dr_f", "_dr_m", "_drf", "_drm",
+    "_dw_f", "_dw_m", "_dwf", "_dwm",
+    "_gn_f", "_gn_m", "_gnf", "_gnm",
+    "_hu_f", "_hu_m", "_huf", "_hum",
+    "_ni_f", "_ni_m", "_nif", "_nim",
+    "_or_f", "_or_m", "_orf", "_orm",
+    "_sc_f", "_sc_m", "_scf", "_scm",
+    "_ta_f", "_ta_m", "_taf", "_tam",
+    "_tr_f", "_tr_m", "_trf", "_trm",
+)
 
-SPELLS_PREFIXES = ("_aura01", "_aura02", "_aura",
-                   "cfx_", "fx_",
-                   "_channel",
-                   "_cast", "_cast01", "_cast02", "_precast", "_precast01", "_precast02",
-                   "_impact", "_impact01", "_impact02",
-                   "_missile01", "_missile",)
+SPELLS_PREFIXES = (
+    "_aura01", "_aura02", "_aura",
+    "cfx_", "fx_",
+    "_channel",
+    "_cast", "_cast01", "_cast02", "_precast", "_precast01", "_precast02",
+    "_impact", "_impact01", "_impact02",
+    "_missile01", "_missile",
+)
 
 
 def auto_texture_pre():

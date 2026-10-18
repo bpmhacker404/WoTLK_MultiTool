@@ -501,21 +501,23 @@ with dpg.window(no_resize=True, no_title_bar=True, tag="win_main"):
         dpg.add_item_clicked_handler(callback=mouse_click)
 
     # Назначаем mouse click handler
-    text_inputs = ("inp_hex_color",
-                   "inp_dec_color",
-                   "inp_hex_bytes",
-                   "inp_x_color",
-                   "inp_y_color",
-                   "inp_z_color",
-                   "inp_model",
-                   "inp_cloner_m2from",
-                   "inp_cloner_m2to",
-                   "inp_x_position",
-                   "inp_y_position",
-                   "inp_z_position",
-                   "inp_scale_modifier",
-                   "inp_model_name_for_copy",
-                   "inp_icon_name_for_copy",)
+    text_inputs = (
+        "inp_hex_color",
+        "inp_dec_color",
+        "inp_hex_bytes",
+        "inp_x_color",
+        "inp_y_color",
+        "inp_z_color",
+        "inp_model",
+        "inp_cloner_m2from",
+        "inp_cloner_m2to",
+        "inp_x_position",
+        "inp_y_position",
+        "inp_z_position",
+        "inp_scale_modifier",
+        "inp_model_name_for_copy",
+        "inp_icon_name_for_copy",
+    )
 
     for text_input in text_inputs:
         dpg.bind_item_handler_registry(text_input, "hnd_mouse_click")

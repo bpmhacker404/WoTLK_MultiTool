@@ -15,8 +15,19 @@ class Config:
     idRelationship = False
     showLoading = False
 
-    ALL_CHECKBOXES = ("chk_Ammo", "chk_Collections", "chk_Creature", "chk_Doodads", "chk_Head", "chk_Quiver", "chk_Shield", "chk_Shoulder",
-                      "chk_Skybox", "chk_Spell", "chk_Weapon",)
+    ALL_CHECKBOXES = (
+        "chk_Ammo",
+        "chk_Collections",
+        "chk_Creature",
+        "chk_Doodads",
+        "chk_Head",
+        "chk_Quiver",
+        "chk_Shield",
+        "chk_Shoulder",
+        "chk_Skybox",
+        "chk_Spell",
+        "chk_Weapon",
+    )
 
 
 # ? ---------------------------------------------------------------------------------------------------------------------------------------
