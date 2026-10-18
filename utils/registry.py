@@ -15,7 +15,6 @@ class RegistryManager:
         self.autoFixHelmOffset = None
         self.autoMoveFilesToPatch = None
         self.listfileFolder = None
-        self.mpqEditorFolder = None
         self.patchFolder = None
         self.wowExportFolder = None
 
@@ -30,7 +29,7 @@ class RegistryManager:
             self.autoFixGlobalSeq = winreg.QueryValueEx(self.key, "autoFixGlobalSeq")[0]
             self.autoFixHelmOffset = winreg.QueryValueEx(self.key, "autoFixHelmOffset")[0]
             self.autoMoveFilesToPatch = winreg.QueryValueEx(self.key, "autoMoveFilesToPatch")[0]
-            self.listfileFolder = winreg.QueryValueEx(self.key, "ListFileFolderPath")[0]
+            self.listfileFolder = winreg.QueryValueEx(self.key, "listfileFolderPath")[0]
             self.patchFolder = winreg.QueryValueEx(self.key, "patchFolderPath")[0]
             self.wowExportFolder = winreg.QueryValueEx(self.key, "wowExportFolderPath")[0]
         except FileNotFoundError:
